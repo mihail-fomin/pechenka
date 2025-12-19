@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:1107/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -86,8 +86,15 @@ export const joinGame = async (
  * Начать игру
  */
 export const startGame = async (gameId: string): Promise<{ success: boolean }> => {
+  const telegramUserHeader = api.defaults.headers.common['x-telegram-user'] as string;
+  let telegramUser;
+  try {
+    telegramUser = telegramUserHeader ? JSON.parse(telegramUserHeader) : null;
+  } catch (e) {
+    // Игнорируем ошибку парсинга
+  }
   const response = await api.post<{ success: boolean }>(`/games/${gameId}/start`, {
-    telegramUser: JSON.parse(api.defaults.headers.common['x-telegram-user'] as string),
+    telegramUser,
   });
   return response.data;
 };
@@ -122,6 +129,16 @@ export const performAction = async (
     playerId,
     action,
   });
+  return response.data;
+};
+
+/**
+ * Добавить тестовых игроков (только в режиме разработки)
+ */
+export const addTestPlayers = async (
+  gameId: string
+): Promise<{ success: boolean; added?: number; totalPlayers?: number }> => {
+  const response = await api.post(`/games/${gameId}/add-test-players`);
   return response.data;
 };
 

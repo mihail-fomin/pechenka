@@ -16,27 +16,43 @@ export const createGame = async (
   const gameId = uuidv4();
   const playerId = uuidv4();
 
-  // Создать экземпляр игры с одним игроком (создателем)
-  const game = new PechenkaGame([playerId], options);
-  
-  // Сохранить в кэш
-  activeGames.set(gameId, game);
+  // Создать список игроков (начинаем с создателя)
+  const players = [
+    {
+      id: playerId,
+      telegramId: creatorTelegramId,
+      name: creatorName,
+    },
+  ];
 
-  // Создать запись в БД
+  // В режиме разработки автоматически добавить тестовых игроков
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  if (isDevelopment) {
+    const testPlayers = [
+      { telegramId: 111111111, name: 'Тестовый Игрок 1' },
+      { telegramId: 222222222, name: 'Тестовый Игрок 2' },
+      { telegramId: 333333333, name: 'Тестовый Игрок 3' },
+    ];
+
+    // Добавить тестовых игроков, чтобы было минимум 4 игрока
+    for (const testPlayer of testPlayers) {
+      players.push({
+        id: uuidv4(),
+        telegramId: testPlayer.telegramId,
+        name: testPlayer.name,
+      });
+    }
+  }
+
+  // Создать запись в БД (игра еще не начата, поэтому PechenkaGame не создаем)
   const gameDoc = new Game({
     gameId,
-    players: [
-      {
-        id: playerId,
-        telegramId: creatorTelegramId,
-        name: creatorName,
-      },
-    ],
+    players,
     state: 'waiting',
     currentRound: 0,
     maxRounds: options?.maxRounds || 3,
     currentPlayerIndex: 0,
-    gameData: game.serialize(),
+    // gameData будет установлен в '' по умолчанию
   });
 
   await gameDoc.save();

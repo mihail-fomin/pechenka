@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import { useWebSocket } from '../../hooks/useWebSocket';
-import { getGameInfo, startGame, getGameState, getPlayerPrivateState } from '../../services/api';
+import { getGameInfo, startGame, getGameState, getPlayerPrivateState, addTestPlayers } from '../../services/api';
 import { GameStateData, PrivatePlayerState, Action } from '../../types/game.types';
 import GameBoard from './GameBoard';
 import PlayerHand from './PlayerHand';
@@ -82,6 +82,19 @@ const GameRoom = () => {
     }
   };
 
+  const handleAddTestPlayers = async () => {
+    if (!gameId) return;
+
+    try {
+      const result = await addTestPlayers(gameId);
+      // Перезагрузить информацию об игре
+      const info = await getGameInfo(gameId);
+      setGameInfo(info);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Ошибка добавления тестовых игроков');
+    }
+  };
+
   const handleAction = (action: Action) => {
     sendAction(action);
   };
@@ -112,10 +125,18 @@ const GameRoom = () => {
               </div>
             ))}
           </div>
+          {import.meta.env.DEV && gameInfo.players.length < 4 && (
+            <button className="btn btn-secondary" onClick={handleAddTestPlayers}>
+              Добавить тестовых игроков
+            </button>
+          )}
           {gameInfo.players.length >= 4 && gameInfo.players[0].id === playerId && (
             <button className="btn btn-primary" onClick={handleStartGame}>
               Начать игру
             </button>
+          )}
+          {gameInfo.players.length < 4 && (
+            <p className="waiting-message">Ожидание игроков (минимум 4)</p>
           )}
           {!connected && <p className="connection-status">Подключение...</p>}
         </div>

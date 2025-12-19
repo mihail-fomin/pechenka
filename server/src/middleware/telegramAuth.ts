@@ -14,6 +14,7 @@ export interface TelegramUser {
 export const telegramAuth = (req: Request, res: Response, next: NextFunction): void => {
   // В заголовке или теле запроса должны быть данные Telegram
   const initData = req.headers['x-telegram-init-data'] as string;
+  const telegramUserHeader = req.headers['x-telegram-user'] as string;
   
   // Для разработки можно передавать данные напрямую
   // В production нужно валидировать через Telegram
@@ -22,9 +23,20 @@ export const telegramAuth = (req: Request, res: Response, next: NextFunction): v
     return next();
   }
 
+  // Проверить заголовок x-telegram-user (для GET запросов и других случаев)
+  if (telegramUserHeader) {
+    try {
+      const telegramUser = JSON.parse(telegramUserHeader);
+      (req as any).telegramUser = telegramUser;
+      return next();
+    } catch (e) {
+      // Игнорируем ошибку парсинга
+    }
+  }
+
   // Если нет данных, можно разрешить для разработки
   // В production нужно возвращать ошибку
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
     // Для разработки можно использовать тестовые данные
     (req as any).telegramUser = {
       id: 123456789,

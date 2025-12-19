@@ -4,6 +4,7 @@ import { findOrCreateUser } from '../services/userService';
 import { Game } from '../models/Game';
 import { telegramAuth } from '../middleware/telegramAuth';
 import { Action } from '../../../backend/src/actions';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
 
@@ -126,6 +127,63 @@ router.post('/:id/start', async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Ошибка начала игры:', error);
     res.status(500).json({ error: error.message || 'Ошибка начала игры' });
+  }
+});
+
+/**
+ * POST /api/games/:id/add-test-players
+ * Добавить тестовых игроков (только в режиме разработки)
+ */
+router.post('/:id/add-test-players', async (req: Request, res: Response) => {
+  try {
+    // Проверить, что это режим разработки
+    if (process.env.NODE_ENV !== 'development') {
+      return res.status(403).json({ error: 'Доступно только в режиме разработки' });
+    }
+
+    const { id } = req.params;
+    const gameDoc = await Game.findOne({ gameId: id });
+
+    if (!gameDoc) {
+      return res.status(404).json({ error: 'Игра не найдена' });
+    }
+
+    if (gameDoc.state !== 'waiting') {
+      return res.status(400).json({ error: 'Игра уже начата' });
+    }
+
+    // Добавить тестовых игроков до минимума (4 игрока)
+    const testPlayers = [
+      { telegramId: 111111111, name: 'Тестовый Игрок 1' },
+      { telegramId: 222222222, name: 'Тестовый Игрок 2' },
+      { telegramId: 333333333, name: 'Тестовый Игрок 3' },
+      { telegramId: 444444444, name: 'Тестовый Игрок 4' },
+      { telegramId: 555555555, name: 'Тестовый Игрок 5' },
+    ];
+
+    let added = 0;
+    for (const testPlayer of testPlayers) {
+      if (gameDoc.players.length >= 6) break;
+      if (gameDoc.players.some(p => p.telegramId === testPlayer.telegramId)) continue;
+
+      gameDoc.players.push({
+        id: uuidv4(),
+        telegramId: testPlayer.telegramId,
+        name: testPlayer.name,
+      });
+      added++;
+    }
+
+    await gameDoc.save();
+
+    res.json({
+      success: true,
+      added,
+      totalPlayers: gameDoc.players.length,
+    });
+  } catch (error: any) {
+    console.error('Ошибка добавления тестовых игроков:', error);
+    res.status(500).json({ error: error.message || 'Ошибка добавления тестовых игроков' });
   }
 });
 

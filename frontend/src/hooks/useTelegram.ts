@@ -1,5 +1,20 @@
 import { useEffect, useState } from 'react';
-import { initDataRaw, initData, WebApp } from '@twa-dev/sdk';
+
+// Тип для Telegram WebApp
+interface WebApp {
+  ready: () => void;
+  expand: () => void;
+  initDataUnsafe?: {
+    user?: {
+      id: number;
+      first_name?: string;
+      last_name?: string;
+      username?: string;
+    };
+  };
+  colorScheme?: 'light' | 'dark';
+  onEvent: (event: string, callback: () => void) => void;
+}
 
 export interface TelegramUser {
   id: number;
@@ -39,7 +54,7 @@ export const useTelegram = (): UseTelegramReturn => {
         });
       } else {
         // Для разработки, если нет данных Telegram
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
           setUser({
             id: 123456789,
             first_name: 'Test User',
@@ -67,7 +82,7 @@ export const useTelegram = (): UseTelegramReturn => {
       setReady(true);
     } else {
       // Для разработки вне Telegram
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         setUser({
           id: 123456789,
           first_name: 'Test User',

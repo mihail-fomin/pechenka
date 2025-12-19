@@ -60,7 +60,7 @@ const GameSchema = new Schema<IGame>(
     },
     gameData: {
       type: String,
-      required: true,
+      default: '',
     },
   },
   {
