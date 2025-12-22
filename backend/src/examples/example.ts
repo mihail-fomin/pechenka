@@ -2,7 +2,7 @@
  * Пример использования игрового движка "Печенька"
  */
 
-import { PechenkaGame } from './game';
+import { PechenkaGame } from '../core/game';
 
 console.log('=== Пример игры "Печенька" ===\n');
 
@@ -32,7 +32,7 @@ console.log('\n=== Игровой процесс ===\n');
 let turnCount = 0;
 const maxTurns = 20;
 
-while (game.state === 'in_progress' && turnCount < maxTurns) {
+while ((game.state === 'circle_phase' || game.state === 'resolving_phase') && turnCount < maxTurns) {
   const player = game.getCurrentPlayer();
   const privateState = game.getPlayerPrivateState(player.id);
   

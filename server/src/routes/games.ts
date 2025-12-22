@@ -3,8 +3,16 @@ import { createGame, addPlayerToGame, startGame, getGameState, getPlayerPrivateS
 import { findOrCreateUser } from '../services/userService';
 import { Game } from '../models/Game';
 import { telegramAuth } from '../middleware/telegramAuth';
-import { Action } from '../../../backend/src/actions';
+import { Action } from '../../../backend/src/models/actions';
 import { v4 as uuidv4 } from 'uuid';
+import { Server } from 'socket.io';
+
+// Глобальная переменная для io (будет установлена из server.ts)
+let ioInstance: Server | null = null;
+
+export const setIoInstance = (io: Server) => {
+  ioInstance = io;
+};
 
 const router = Router();
 
@@ -123,6 +131,25 @@ router.post('/:id/start', async (req: Request, res: Response) => {
       return res.status(400).json({ error: result.error });
     }
 
+    // Отправить обновление состояния всем игрокам через WebSocket
+    if (ioInstance) {
+      const gameState = await getGameState(id);
+      if (gameState) {
+        ioInstance.to(`game:${id}`).emit('game-state', gameState);
+
+        // Отправить приватные состояния каждому игроку
+        const game = await Game.findOne({ gameId: id });
+        if (game) {
+          for (const player of game.players) {
+            const playerPrivateState = await getPlayerPrivateState(id, player.id);
+            if (playerPrivateState) {
+              ioInstance.to(`game:${id}`).emit('private-state', playerPrivateState);
+            }
+          }
+        }
+      }
+    }
+
     res.json({ success: true });
   } catch (error: any) {
     console.error('Ошибка начала игры:', error);
@@ -137,7 +164,9 @@ router.post('/:id/start', async (req: Request, res: Response) => {
 router.post('/:id/add-test-players', async (req: Request, res: Response) => {
   try {
     // Проверить, что это режим разработки
-    if (process.env.NODE_ENV !== 'development') {
+    // Если NODE_ENV не установлен, считаем это режимом разработки
+    const nodeEnv = process.env.NODE_ENV || 'development';
+    if (nodeEnv === 'production') {
       return res.status(403).json({ error: 'Доступно только в режиме разработки' });
     }
 

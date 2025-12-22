@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "jest"
   },
   "keywords": ["game", "server", "telegram", "mini-app"],

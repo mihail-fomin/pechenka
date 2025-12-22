@@ -3,10 +3,10 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { getGameInfo, startGame, getGameState, getPlayerPrivateState, addTestPlayers } from '../../services/api';
-import { GameStateData, PrivatePlayerState, Action } from '../../types/game.types';
+import { GameStateData, PrivatePlayerState, Action, Card } from '../../types/game.types';
 import GameBoard from './GameBoard';
 import PlayerHand from './PlayerHand';
-import ActionButtons from './ActionButtons';
+import TargetSelectionModal from './TargetSelectionModal';
 import RoundSummary from './RoundSummary';
 import GameEnd from './GameEnd';
 import './GameRoom.css';
@@ -22,6 +22,11 @@ const GameRoom = () => {
   const [privateState, setPrivateState] = useState<PrivatePlayerState | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalActionType, setModalActionType] = useState<'sword' | 'shield' | null>(null);
+  const [selectedTarget, setSelectedTarget] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<Action | null>(null);
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
 
   const playerId = location.state?.playerId;
 
@@ -76,6 +81,23 @@ const GameRoom = () => {
 
     try {
       await startGame(gameId);
+
+      // Перезагрузить информацию об игре
+      const info = await getGameInfo(gameId);
+      setGameInfo(info);
+
+      // Если игра началась, загрузить состояние
+      if (info.state !== 'waiting') {
+        const state = await getGameState(gameId);
+        setGameState(state);
+
+        if (playerId) {
+          const privateStateData = await getPlayerPrivateState(gameId, playerId);
+          setPrivateState(privateStateData);
+        }
+      }
+
+      // Также запросить обновление через WebSocket
       requestState();
     } catch (err: any) {
       setError(err.response?.data?.error || 'Ошибка начала игры');
@@ -86,7 +108,7 @@ const GameRoom = () => {
     if (!gameId) return;
 
     try {
-      const result = await addTestPlayers(gameId);
+      await addTestPlayers(gameId);
       // Перезагрузить информацию об игре
       const info = await getGameInfo(gameId);
       setGameInfo(info);
@@ -97,6 +119,88 @@ const GameRoom = () => {
 
   const handleAction = (action: Action) => {
     sendAction(action);
+    setModalOpen(false);
+    setSelectedTarget(null);
+    setModalActionType(null);
+    setPendingAction(null);
+    setSelectedCardIndex(null);
+  };
+
+  const handleConfirmAction = () => {
+    if (pendingAction) {
+      handleAction(pendingAction);
+    }
+  };
+
+  const handleCardClick = (card: Card, index: number) => {
+    if (!gameState || !privateState) return;
+
+    const currentPlayer = gameState.players.find((p) => p.id === playerId);
+    const isCurrentTurn = gameState.currentPlayerIndex === gameState.players.findIndex((p) => p.id === playerId);
+
+    if (!isCurrentTurn || !currentPlayer) return;
+
+    // Обработка подсказки - сохраняем выбор, показываем визуально
+    if (card.type === 'hint') {
+      setSelectedCardIndex(index);
+      setPendingAction({
+        type: 'reveal',
+        cardIndex: index,
+      });
+      return;
+    }
+
+    // Обработка меча - открываем попап с выбором цели (после закрытия превью карты)
+    if (card.type === 'sword' && !currentPlayer.usedSword) {
+      // Небольшая задержка, чтобы превью успело закрыться
+      setTimeout(() => {
+        setModalActionType('sword');
+        setModalOpen(true);
+      }, 100);
+      return;
+    }
+
+    // Обработка щита - открываем попап с подтверждением (после закрытия превью карты)
+    if (card.type === 'shield' && !currentPlayer.usedShield) {
+      // Небольшая задержка, чтобы превью успело закрыться
+      setTimeout(() => {
+        setModalActionType('shield');
+        setModalOpen(true);
+      }, 100);
+      return;
+    }
+  };
+
+  const handleModalConfirm = () => {
+    if (!modalActionType || !gameState) return;
+
+    if (modalActionType === 'sword') {
+      if (selectedTarget) {
+        setPendingAction({
+          type: 'sword',
+          targetId: selectedTarget,
+        });
+        setModalOpen(false);
+        setSelectedTarget(null);
+        setModalActionType(null);
+      }
+    } else if (modalActionType === 'shield') {
+      if (selectedTarget) {
+        setPendingAction({
+          type: 'shield',
+          targetId: selectedTarget,
+        });
+        setModalOpen(false);
+        setSelectedTarget(null);
+        setModalActionType(null);
+      }
+    }
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setSelectedTarget(null);
+    setModalActionType(null);
   };
 
   if (loading) {
@@ -165,13 +269,53 @@ const GameRoom = () => {
 
           {privateState && (
             <>
-              <PlayerHand hand={privateState.hand} />
-              <ActionButtons
-                gameState={gameState}
-                privateState={privateState}
-                currentPlayerId={playerId}
-                onAction={handleAction}
+              <PlayerHand 
+                hand={privateState.hand}
+                onCardClick={handleCardClick}
+                isCurrentTurn={
+                  gameState.currentPlayerIndex === gameState.players.findIndex((p) => p.id === playerId)
+                }
+                usedSword={gameState.players.find((p) => p.id === playerId)?.usedSword || false}
+                usedShield={gameState.players.find((p) => p.id === playerId)?.usedShield || false}
+                selectedCardIndex={selectedCardIndex}
               />
+              {modalOpen && modalActionType && (
+                <TargetSelectionModal
+                  isOpen={modalOpen}
+                  actionType={modalActionType}
+                  gameState={gameState}
+                  currentPlayerId={playerId}
+                  onSelectTarget={setSelectedTarget}
+                  onConfirm={handleModalConfirm}
+                  onClose={handleModalClose}
+                  selectedTarget={selectedTarget}
+                />
+              )}
+              {pendingAction && gameState.currentPlayerIndex === gameState.players.findIndex((p) => p.id === playerId) && (
+                <div className="confirm-action-panel">
+                  <div className="confirm-action-info">
+                    <p>Выбрано действие:</p>
+                    {pendingAction.type === 'reveal' && (
+                      <div className="selected-action">
+                        <span>Вскрыть подсказку: {privateState.hand[pendingAction.cardIndex]?.value || '?'}</span>
+                      </div>
+                    )}
+                    {pendingAction.type === 'sword' && 'targetId' in pendingAction && (
+                      <div className="selected-action">
+                        <span>Атаковать: {gameState.players.find(p => p.id === pendingAction.targetId)?.name || '?'}</span>
+                      </div>
+                    )}
+                    {pendingAction.type === 'shield' && 'targetId' in pendingAction && (
+                      <div className="selected-action">
+                        <span>Защититься от: {gameState.players.find(p => p.id === pendingAction.targetId)?.name || '?'}</span>
+                      </div>
+                    )}
+                  </div>
+                  <button className="btn-confirm-turn" onClick={handleConfirmAction}>
+                    Подтвердить ход
+                  </button>
+                </div>
+              )}
             </>
           )}
 

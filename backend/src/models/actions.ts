@@ -7,7 +7,7 @@ import { Card } from './deck';
 /**
  * Тип действия игрока
  */
-export type ActionType = 'reveal' | 'sword' | 'shield';
+export type ActionType = 'reveal' | 'sword' | 'shield' | 'hill';
 
 /**
  * Базовый интерфейс действия
@@ -37,12 +37,20 @@ export interface SwordAction extends BaseAction {
  */
 export interface ShieldAction extends BaseAction {
   type: 'shield';
+  targetId?: string; // ID игрока, от которого защищаемся (опционально)
+}
+
+/**
+ * Действие: выложить карту Холма
+ */
+export interface HillAction extends BaseAction {
+  type: 'hill';
 }
 
 /**
  * Объединённый тип действия
  */
-export type Action = RevealAction | SwordAction | ShieldAction;
+export type Action = RevealAction | SwordAction | ShieldAction | HillAction;
 
 /**
  * Результат действия

@@ -2,7 +2,7 @@
  * Тесты для модуля character
  */
 
-import { Character, getTarget, getHunter, getAllCharacters, HUNT_CHAIN } from '../src/character';
+import { Character, getTarget, getHunter, getAllCharacters, HUNT_CHAIN } from '../src/models/character';
 
 describe('Character', () => {
   test('должен получить цель охоты для каждого персонажа', () => {

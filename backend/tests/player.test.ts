@@ -2,9 +2,9 @@
  * Тесты для модуля player
  */
 
-import { Player } from '../src/player';
-import { Card } from '../src/deck';
-import { Character } from '../src/character';
+import { Player } from '../src/core/player';
+import { Card } from '../src/models/deck';
+import { Character } from '../src/models/character';
 
 describe('Player', () => {
   let player: Player;

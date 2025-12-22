@@ -10,7 +10,7 @@ export interface IPlayer {
 export interface IGame extends Document {
   gameId: string;
   players: IPlayer[];
-  state: 'waiting' | 'in_progress' | 'round_end' | 'game_end';
+  state: 'waiting' | 'circle_phase' | 'resolving_phase' | 'round_end' | 'game_end';
   currentRound: number;
   maxRounds: number;
   currentPlayerIndex: number;
@@ -43,7 +43,7 @@ const GameSchema = new Schema<IGame>(
     },
     state: {
       type: String,
-      enum: ['waiting', 'in_progress', 'round_end', 'game_end'],
+      enum: ['waiting', 'circle_phase', 'resolving_phase', 'round_end', 'game_end'],
       default: 'waiting',
     },
     currentRound: {

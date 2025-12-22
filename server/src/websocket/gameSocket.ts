@@ -2,7 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { getGameState, getPlayerPrivateState, processPlayerAction } from '../services/gameService';
 import { Game } from '../models/Game';
 import { GameSession } from '../models/GameSession';
-import { Action } from '../../../backend/src/actions';
+import { Action } from '../../../backend/src/models/actions';
 
 interface SocketData {
   gameId?: string;

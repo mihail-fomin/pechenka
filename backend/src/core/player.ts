@@ -2,8 +2,8 @@
  * Класс игрока
  */
 
-import { Character, getTarget, getHunter } from './character';
-import { Card } from './deck';
+import { Character, getTarget, getHunter } from '../models/character';
+import { Card } from '../models/deck';
 
 /**
  * Класс игрока
@@ -15,6 +15,7 @@ export class Player {
   public revealedCards: Card[] = [];
   public usedSword: boolean = false;
   public usedShield: boolean = false;
+  public shieldTargetId: string | null = null; // ID игрока, от которого защитились
 
   constructor(
     public id: string,
@@ -77,8 +78,9 @@ export class Player {
 
   /**
    * Использовать карту Щита (защита)
+   * @param targetId - ID игрока, от которого защищаемся (опционально)
    */
-  useShield(): void {
+  useShield(targetId?: string): void {
     if (this.usedShield) {
       throw new Error('Щит уже использован в этом раунде');
     }
@@ -90,6 +92,7 @@ export class Player {
 
     this.hand.splice(shieldCardIndex, 1);
     this.usedShield = true;
+    this.shieldTargetId = targetId || null;
   }
 
   /**
@@ -120,6 +123,7 @@ export class Player {
   resetRound(): void {
     this.usedSword = false;
     this.usedShield = false;
+    this.shieldTargetId = null;
     this.revealedCards = [];
   }
 
@@ -142,6 +146,13 @@ export class Player {
    */
   hasHints(): boolean {
     return this.hand.some(card => card.isHint());
+  }
+
+  /**
+   * Проверить, есть ли карта Холма в руке
+   */
+  hasHill(): boolean {
+    return this.hand.some(card => card.isHill());
   }
 }
 

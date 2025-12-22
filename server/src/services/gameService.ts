@@ -1,4 +1,4 @@
-import { PechenkaGame, GameState, GameOptions } from '../../../backend/src/game';
+import { PechenkaGame, GameState, GameOptions } from '../../../backend/src/core/game';
 import { Game, IGame } from '../models/Game';
 import { v4 as uuidv4 } from 'uuid';
 

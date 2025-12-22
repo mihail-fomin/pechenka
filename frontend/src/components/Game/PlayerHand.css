@@ -1,37 +1,78 @@
 .player-hand {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.player-hand h3 {
-  margin: 0 0 15px 0;
-  color: #333;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+  z-index: 100;
+  pointer-events: none;
 }
 
 .cards-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  max-width: 100vw;
+  overflow-y: visible;
+  padding: 10px;
+  pointer-events: auto;
+  width: 100%;
 }
 
 .card {
-  width: 100px;
-  height: 140px;
-  border-radius: 10px;
-  border: 2px solid #ddd;
+  /* Вертикальные карты большего размера */
+  width: 90px;
+  height: 130px;
+  border-radius: 8px;
+  border: 3px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+/* Адаптивные размеры для мобильных */
+@media (max-width: 480px) {
+  .player-hand {
+    padding: 8px;
+  }
+  
+  .cards-container {
+    gap: 8px;
+    padding: 8px;
+  }
+  
+  .card {
+    width: 75px;
+    height: 110px;
+    border-width: 2px;
+  }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 360px) {
+  .card {
+    width: 65px;
+    height: 95px;
+  }
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 200 !important;
+}
+
+@media (max-width: 480px) {
+  .card:hover {
+    transform: scale(1.08) !important;
+  }
 }
 
 .card.hint {
@@ -49,25 +90,131 @@
   color: white;
 }
 
+.card.hill {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  color: #333;
+}
+
 .card-content {
   text-align: center;
-  padding: 10px;
+  padding: 12px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-icon {
   font-size: 40px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .card-type {
   font-size: 12px;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .card-value {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  .card-icon {
+    font-size: 32px;
+    margin-bottom: 6px;
+  }
+  
+  .card-type {
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+  
+  .card-value {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-icon {
+    font-size: 28px;
+  }
+  
+  .card-type {
+    font-size: 9px;
+  }
+  
+  .card-value {
+    font-size: 14px;
+  }
+}
+
+.card.clickable {
+  cursor: pointer;
+}
+
+.card.clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.card.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.card-used {
+  font-size: 10px;
+  margin-top: 5px;
+  opacity: 0.8;
+}
+
+.card.selected {
+  border: 3px solid #667eea;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+  transform: scale(1.15) !important;
+  z-index: 150 !important;
+}
+
+.card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: #667eea;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  .card.selected {
+    transform: scale(1.1) !important;
+  }
+  
+  .card.selected::after {
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    top: 3px;
+    right: 3px;
+  }
 }
 
 

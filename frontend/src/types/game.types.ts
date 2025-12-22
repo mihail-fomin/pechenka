@@ -1,8 +1,8 @@
 // Типы для игры, совместимые с backend
 
-export type GameState = 'waiting' | 'in_progress' | 'round_end' | 'game_end';
+export type GameState = 'waiting' | 'circle_phase' | 'resolving_phase' | 'round_end' | 'game_end';
 
-export type ActionType = 'reveal' | 'sword' | 'shield';
+export type ActionType = 'reveal' | 'sword' | 'shield' | 'hill';
 
 export interface BaseAction {
   type: ActionType;
@@ -20,12 +20,17 @@ export interface SwordAction extends BaseAction {
 
 export interface ShieldAction extends BaseAction {
   type: 'shield';
+  targetId?: string;
 }
 
-export type Action = RevealAction | SwordAction | ShieldAction;
+export interface HillAction extends BaseAction {
+  type: 'hill';
+}
+
+export type Action = RevealAction | SwordAction | ShieldAction | HillAction;
 
 export interface Card {
-  type: 'hint' | 'sword' | 'shield';
+  type: 'hint' | 'sword' | 'shield' | 'hill';
   value: string | null;
 }
 

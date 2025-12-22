@@ -2,8 +2,8 @@
  * Тесты для модуля game
  */
 
-import { PechenkaGame } from '../src/game';
-import { Character } from '../src/character';
+import { PechenkaGame } from '../src/core/game';
+import { Character } from '../src/models/character';
 
 describe('PechenkaGame', () => {
   test('должен создать игру с 4 игроками', () => {
@@ -108,7 +108,7 @@ describe('PechenkaGame', () => {
 
       // Завершим раунд вручную для подсчета очков
       // Симулируем завершение раунда
-      while (game.state === 'in_progress') {
+      while ((game.state === 'circle_phase' || game.state === 'resolving_phase')) {
         const currentPlayer = game.getCurrentPlayer();
         if (currentPlayer.hasHints()) {
           const hintIndex = currentPlayer.hand.findIndex(c => c.isHint());
@@ -139,7 +139,7 @@ describe('PechenkaGame', () => {
     const state = game.getGameState();
     expect(state.players).toHaveLength(4);
     expect(state.currentRound).toBe(1);
-    expect(state.state).toBe('in_progress');
+    expect(['circle_phase', 'resolving_phase']).toContain(state.state);
   });
 
   test('должен вернуть приватное состояние игрока', () => {
@@ -160,7 +160,7 @@ describe('PechenkaGame', () => {
 
     // Симулируем быстрый раунд
     let turns = 0;
-    while (game.state === 'in_progress' && turns < 100) {
+    while ((game.state === 'circle_phase' || game.state === 'resolving_phase') && turns < 100) {
       const player = game.getCurrentPlayer();
       
       if (player.hasHints()) {

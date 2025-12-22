@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDatabase } from './config/database';
-import gameRoutes from './routes/games';
+import gameRoutes, { setIoInstance } from './routes/games';
 import { setupGameSocket } from './websocket/gameSocket';
 
 dotenv.config();
@@ -27,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/games', gameRoutes);
+
+// Установить io instance для routes
+setIoInstance(io);
 
 // Health check
 app.get('/health', (req, res) => {

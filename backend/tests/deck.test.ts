@@ -2,8 +2,8 @@
  * Тесты для модуля deck
  */
 
-import { Deck, Card } from '../src/deck';
-import { Character } from '../src/character';
+import { Deck, Card } from '../src/models/deck';
+import { Character } from '../src/models/character';
 
 describe('Card', () => {
   test('должен создать карту-подсказку', () => {
@@ -28,19 +28,26 @@ describe('Card', () => {
     expect(card.value).toBeNull();
     expect(card.isShield()).toBe(true);
   });
+
+  test('должен создать карту Холма', () => {
+    const card = new Card('hill');
+    expect(card.type).toBe('hill');
+    expect(card.value).toBeNull();
+    expect(card.isHill()).toBe(true);
+  });
 });
 
 describe('Deck', () => {
   test('должен создать колоду для 4 игроков', () => {
     const deck = new Deck(4);
-    // 12 карт-подсказок (2 каждого персонажа) + 4 меча + 4 щита = 20 карт
-    expect(deck.cards.length).toBe(20);
+    // 6 персонажей * 4 подсказки = 24 подсказки + 4 меча + 4 щита + 4 холма = 36 карт
+    expect(deck.cards.length).toBe(36);
   });
 
   test('должен создать колоду для 6 игроков', () => {
     const deck = new Deck(6);
-    // 12 карт-подсказок + 6 мечей + 6 щитов = 24 карты
-    expect(deck.cards.length).toBe(24);
+    // 6 персонажей * 6 подсказок = 36 подсказок + 6 мечей + 6 щитов + 6 холмов = 54 карты
+    expect(deck.cards.length).toBe(54);
   });
 
   test('должен содержать правильное количество карт каждого типа', () => {
@@ -48,13 +55,15 @@ describe('Deck', () => {
     const hints = deck.cards.filter(c => c.isHint());
     const swords = deck.cards.filter(c => c.isSword());
     const shields = deck.cards.filter(c => c.isShield());
+    const hills = deck.cards.filter(c => c.isHill());
 
-    expect(hints.length).toBe(12);
+    expect(hints.length).toBe(24); // 6 персонажей * 4 игрока
     expect(swords.length).toBe(4);
     expect(shields.length).toBe(4);
+    expect(hills.length).toBe(4);
   });
 
-  test('должен содержать по 2 карты-подсказки каждого персонажа', () => {
+  test('должен содержать по playerCount карты-подсказки каждого персонажа', () => {
     const deck = new Deck(4);
     const hints = deck.cards.filter(c => c.isHint());
     
@@ -64,12 +73,13 @@ describe('Deck', () => {
       characterCounts.set(char, (characterCounts.get(char) || 0) + 1);
     });
 
-    expect(characterCounts.get(Character.PECHENKA)).toBe(2);
-    expect(characterCounts.get(Character.BLUE)).toBe(2);
-    expect(characterCounts.get(Character.STRONTIUM)).toBe(2);
-    expect(characterCounts.get(Character.RED)).toBe(2);
-    expect(characterCounts.get(Character.GREEN)).toBe(2);
-    expect(characterCounts.get(Character.YELLOW)).toBe(2);
+    // Каждый персонаж должен иметь по 4 подсказки (по одной для каждого игрока)
+    expect(characterCounts.get(Character.PECHENKA)).toBe(4);
+    expect(characterCounts.get(Character.BLUE)).toBe(4);
+    expect(characterCounts.get(Character.STRONTIUM)).toBe(4);
+    expect(characterCounts.get(Character.RED)).toBe(4);
+    expect(characterCounts.get(Character.GREEN)).toBe(4);
+    expect(characterCounts.get(Character.YELLOW)).toBe(4);
   });
 
   test('должен перемешать колоду', () => {
