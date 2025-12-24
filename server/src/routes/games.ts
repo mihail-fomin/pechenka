@@ -263,6 +263,165 @@ router.get('/:id/private-state', async (req: Request, res: Response) => {
 });
 
 /**
+ * POST /api/games/:id/auto-play
+ * Автоматически сыграть случайной картой (только в режиме разработки)
+ */
+router.post('/:id/auto-play', async (req: Request, res: Response) => {
+  try {
+    // Проверить, что это режим разработки
+    const nodeEnv = process.env.NODE_ENV || 'development';
+    if (nodeEnv === 'production') {
+      return res.status(403).json({ error: 'Доступно только в режиме разработки' });
+    }
+
+    const { id } = req.params;
+    const { playerId, allPlayers } = req.body;
+
+    const gameDoc = await Game.findOne({ gameId: id });
+    if (!gameDoc) {
+      return res.status(404).json({ error: 'Игра не найдена' });
+    }
+
+    const gameState = await getGameState(id);
+    if (!gameState) {
+      return res.status(404).json({ error: 'Состояние игры не найдено' });
+    }
+
+    if (gameState.state !== 'circle_phase' && gameState.state !== 'resolving_phase') {
+      return res.status(400).json({ error: 'Автоход доступен только в фазе круга или раскрытия' });
+    }
+
+    const results: Array<{ playerId: string; success: boolean; action?: any; error?: string }> = [];
+
+    // Режим зависит от фазы игры
+    if (gameState.state === 'circle_phase') {
+      // Фаза круга - выбираем случайные карты
+      const playersToAct = allPlayers 
+        ? gameDoc.players.map(p => p.id)
+        : playerId ? [playerId] : [];
+
+      if (playersToAct.length === 0) {
+        return res.status(400).json({ error: 'Не указаны игроки для автохода' });
+      }
+
+      for (const pid of playersToAct) {
+        // Проверить, не выложил ли уже игрок карту
+        if (gameState.circleInfo?.playersPlaced.includes(pid)) {
+          results.push({ playerId: pid, success: false, error: 'Уже выложена карта' });
+          continue;
+        }
+
+        // Получить приватное состояние игрока
+        const privateState = await getPlayerPrivateState(id, pid);
+        if (!privateState || privateState.hand.length === 0) {
+          results.push({ playerId: pid, success: false, error: 'Нет карт в руке' });
+          continue;
+        }
+
+        // Выбрать случайную карту
+        const hand = privateState.hand;
+        const randomIndex = Math.floor(Math.random() * hand.length);
+        const randomCard = hand[randomIndex];
+
+        // Сформировать действие в зависимости от типа карты
+        let action: Action;
+        if (randomCard.type === 'hint') {
+          action = { type: 'reveal', cardIndex: randomIndex };
+        } else if (randomCard.type === 'sword') {
+          // Выбрать случайную цель для меча
+          const otherPlayers = gameDoc.players.filter(p => p.id !== pid);
+          const randomTarget = otherPlayers[Math.floor(Math.random() * otherPlayers.length)];
+          action = { type: 'sword', targetId: randomTarget.id };
+        } else if (randomCard.type === 'shield') {
+          // Выбрать случайную цель для щита
+          const otherPlayers = gameDoc.players.filter(p => p.id !== pid);
+          const randomTarget = otherPlayers[Math.floor(Math.random() * otherPlayers.length)];
+          action = { type: 'shield', targetId: randomTarget.id };
+        } else if (randomCard.type === 'hill') {
+          action = { type: 'hill' };
+        } else {
+          results.push({ playerId: pid, success: false, error: 'Неизвестный тип карты' });
+          continue;
+        }
+
+        // Выполнить действие
+        const result = await processPlayerAction(id, pid, action);
+        results.push({ 
+          playerId: pid, 
+          success: result.success, 
+          action: result.success ? action : undefined,
+          error: result.error 
+        });
+      }
+    } else if (gameState.state === 'resolving_phase') {
+      // Фаза раскрытия - выполняем действия из очереди
+      const queue = gameState.resolvingQueue || [];
+      
+      // Определяем сколько действий выполнять
+      const actionsToProcess = allPlayers ? queue.length : 1;
+      
+      for (let i = 0; i < actionsToProcess && queue.length > 0; i++) {
+        // Получаем актуальное состояние игры (очередь могла измениться)
+        const currentState = await getGameState(id);
+        if (!currentState || currentState.state !== 'resolving_phase') {
+          break; // Фаза завершилась
+        }
+        
+        const currentQueue = currentState.resolvingQueue || [];
+        if (currentQueue.length === 0) break;
+        
+        const nextItem = currentQueue[0];
+        const pid = nextItem.playerId;
+        
+        // Сформировать действие в зависимости от типа
+        let action: Action;
+        const otherPlayers = gameDoc.players.filter(p => p.id !== pid);
+        const randomTarget = otherPlayers[Math.floor(Math.random() * otherPlayers.length)];
+        
+        if (nextItem.actionType === 'sword') {
+          action = { type: 'sword', targetId: randomTarget.id };
+        } else {
+          action = { type: 'shield', targetId: randomTarget.id };
+        }
+
+        // Выполнить действие
+        const result = await processPlayerAction(id, pid, action);
+        results.push({ 
+          playerId: pid, 
+          success: result.success, 
+          action: result.success ? action : undefined,
+          error: result.error 
+        });
+      }
+    }
+
+    // Отправить обновление состояния всем игрокам через WebSocket
+    if (ioInstance) {
+      const updatedGameState = await getGameState(id);
+      if (updatedGameState) {
+        ioInstance.to(`game:${id}`).emit('game-state', updatedGameState);
+
+        // Отправить приватные состояния каждому игроку
+        for (const player of gameDoc.players) {
+          const playerPrivateState = await getPlayerPrivateState(id, player.id);
+          if (playerPrivateState) {
+            ioInstance.to(`game:${id}`).emit('private-state', playerPrivateState);
+          }
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      results,
+    });
+  } catch (error: any) {
+    console.error('Ошибка автохода:', error);
+    res.status(500).json({ error: error.message || 'Ошибка автохода' });
+  }
+});
+
+/**
  * POST /api/games/:id/action
  * Выполнить действие игрока
  */

@@ -3,7 +3,7 @@
  */
 
 export { PechenkaGame } from './core/game';
-export type { GameState, GameOptions, HistoryEntry, PublicPlayerState, PrivatePlayerState, GameStateData, GameEndResult } from './core/game';
+export type { GameState, GameOptions, HistoryEntry, PublicPlayerState, PrivatePlayerState, GameStateData, GameEndResult, PlayedCardInfo, CircleInfo } from './core/game';
 
 export { Player } from './core/player';
 

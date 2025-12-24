@@ -142,4 +142,23 @@ export const addTestPlayers = async (
   return response.data;
 };
 
+/**
+ * Автоматически сыграть случайной картой (только в режиме разработки)
+ */
+export const autoPlay = async (
+  gameId: string,
+  options: { playerId?: string; allPlayers?: boolean }
+): Promise<{ 
+  success: boolean; 
+  results?: Array<{ 
+    playerId: string; 
+    success: boolean; 
+    action?: any; 
+    error?: string 
+  }> 
+}> => {
+  const response = await api.post(`/games/${gameId}/auto-play`, options);
+  return response.data;
+};
+
 

@@ -51,11 +51,33 @@ export interface PrivatePlayerState {
   hunter: string;
 }
 
+export interface PlayedCardInfo {
+  playerId: string;
+  playerName: string;
+  cardType: 'hint' | 'sword' | 'shield' | 'hill' | 'hidden';
+  cardValue?: string | null;
+  order: number;
+}
+
+export interface CircleInfo {
+  currentCircle: number;
+  maxCircles: number;
+  playersPlaced: string[];
+  playedCards: PlayedCardInfo[];
+}
+
+export interface ResolvingQueueItem {
+  playerId: string;
+  actionType: 'sword' | 'shield';
+}
+
 export interface GameStateData {
   players: PublicPlayerState[];
   currentRound: number;
   currentPlayerIndex: number;
   state: GameState;
+  circleInfo?: CircleInfo;
+  resolvingQueue?: ResolvingQueueItem[];
 }
 
 

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { GameStateData, PrivatePlayerState, Action } from '../types/game.types';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:1107';
 
 interface UseWebSocketOptions {
   gameId: string;
@@ -18,7 +18,24 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
   const socketRef = useRef<Socket | null>(null);
   const [connected, setConnected] = useState(false);
 
+  // Используем refs для колбэков, чтобы избежать пересоздания WebSocket при их изменении
+  const onGameStateRef = useRef(onGameState);
+  const onPrivateStateRef = useRef(onPrivateState);
+  const onErrorRef = useRef(onError);
+
+  // Обновляем refs при изменении колбэков
   useEffect(() => {
+    onGameStateRef.current = onGameState;
+    onPrivateStateRef.current = onPrivateState;
+    onErrorRef.current = onError;
+  }, [onGameState, onPrivateState, onError]);
+
+  useEffect(() => {
+    // Не подключаться, если нет gameId или playerId
+    if (!gameId || !playerId) {
+      return;
+    }
+
     // Создать подключение
     const socket = io(SOCKET_URL, {
       transports: ['websocket'],
@@ -45,21 +62,21 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
     });
 
     socket.on('game-state', (state: GameStateData) => {
-      onGameState?.(state);
+      onGameStateRef.current?.(state);
     });
 
     socket.on('private-state', (state: PrivatePlayerState) => {
-      onPrivateState?.(state);
+      onPrivateStateRef.current?.(state);
     });
 
     socket.on('error', (data: { message: string }) => {
       console.error('WebSocket ошибка:', data.message);
-      onError?.(data.message);
+      onErrorRef.current?.(data.message);
     });
 
     socket.on('action-error', (data: { error: string }) => {
       console.error('Ошибка действия:', data.error);
-      onError?.(data.error);
+      onErrorRef.current?.(data.error);
     });
 
     socket.on('player-joined', (data: { playerId: string; playerName: string }) => {
@@ -74,7 +91,7 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
     return () => {
       socket.disconnect();
     };
-  }, [gameId, playerId, telegramId, onGameState, onPrivateState, onError]);
+  }, [gameId, playerId, telegramId]); // Убрали колбэки из зависимостей!
 
   // Отправить действие
   const sendAction = useCallback((action: Action) => {
@@ -96,5 +113,3 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
     requestState,
   };
 };
-
-

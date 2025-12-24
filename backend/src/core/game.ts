@@ -56,6 +56,35 @@ export interface PrivatePlayerState {
 }
 
 /**
+ * Информация о выложенной карте на столе
+ */
+export interface PlayedCardInfo {
+  playerId: string;
+  playerName: string;
+  cardType: 'hint' | 'sword' | 'shield' | 'hill' | 'hidden';
+  cardValue?: string | null;
+  order: number; // порядок выкладывания
+}
+
+/**
+ * Информация о текущем круге
+ */
+export interface CircleInfo {
+  currentCircle: number;
+  maxCircles: number;
+  playersPlaced: string[]; // id игроков, которые уже выложили карту
+  playedCards: PlayedCardInfo[]; // выложенные карты (видимые после вскрытия)
+}
+
+/**
+ * Элемент очереди разрешения
+ */
+export interface ResolvingQueueItem {
+  playerId: string;
+  actionType: 'sword' | 'shield';
+}
+
+/**
  * Полное состояние игры
  */
 export interface GameStateData {
@@ -63,6 +92,8 @@ export interface GameStateData {
   currentRound: number;
   currentPlayerIndex: number;
   state: GameState;
+  circleInfo?: CircleInfo;
+  resolvingQueue?: ResolvingQueueItem[];
 }
 
 /**
@@ -270,6 +301,16 @@ export class PechenkaGame {
   }
 
   /**
+   * Получить информацию об очереди разрешения
+   */
+  getResolvingQueue(): Array<{ playerId: string; actionType: 'sword' | 'shield' }> {
+    return this.resolvingQueue.map(item => ({
+      playerId: item.playerId,
+      actionType: item.action.type as 'sword' | 'shield'
+    }));
+  }
+
+  /**
    * Обработать действие игрока
    * @param playerId - ID игрока
    * @param action - Действие
@@ -450,6 +491,8 @@ export class PechenkaGame {
 
   /**
    * Выполнить действие в фазе разрешения
+   * Примечание: карта уже была удалена из руки в revealCircleCards,
+   * здесь нужно только отметить использование и записать историю
    */
   private executeResolvingAction(playerId: string, queuedAction: Action, action: Action): ActionResult {
     const player = this.players.find(p => p.id === playerId)!;
@@ -465,22 +508,23 @@ export class PechenkaGame {
         return { type: 'error', error: 'Цель не найдена' };
       }
 
-      // Проверка: нельзя атаковать того, кто уже защитился от тебя
-      if (target.usedShield) {
-        const shieldAction = this.history
-          .filter(h => h.playerId === target.id && h.action.type === 'shield')
-          .pop();
-        if (shieldAction && (shieldAction.action as ShieldAction).targetId === playerId) {
-          return { type: 'error', error: 'Нельзя атаковать того, кто уже защитился от вас' };
-        }
+      // Проверка: нельзя атаковать самого себя
+      if (swordAction.targetId === playerId) {
+        return { type: 'error', error: 'Нельзя атаковать самого себя' };
       }
 
-      player.useSword(swordAction.targetId);
+      // Проверка: нельзя атаковать того, кто уже защитился от тебя
+      if (target.usedShield && target.shieldTargetId === playerId) {
+        return { type: 'error', error: 'Нельзя атаковать того, кто уже защитился от вас' };
+      }
+
+      // Отметить использование меча (карта уже удалена из руки в revealCircleCards)
+      player.usedSword = true;
       const isCorrectTarget = target.role === player.getTarget();
 
-    // Запись в историю
-    this.history.push({
-      playerId,
+      // Запись в историю
+      this.history.push({
+        playerId,
         action: swordAction,
         result: { type: 'sword_used', target: swordAction.targetId, success: isCorrectTarget },
         timestamp: Date.now()
@@ -500,18 +544,25 @@ export class PechenkaGame {
           return { type: 'error', error: 'Цель не найдена' };
         }
 
+        // Проверка: нельзя защититься от самого себя
+        if (shieldAction.targetId === playerId) {
+          return { type: 'error', error: 'Нельзя защититься от самого себя' };
+        }
+
         // Проверка: нельзя защититься от того, кто уже атаковал тебя
         if (target.usedSword) {
-          const swordAction = this.history
+          const existingSwordAction = this.history
             .filter(h => h.playerId === target.id && h.action.type === 'sword')
             .pop();
-          if (swordAction && (swordAction.action as SwordAction).targetId === playerId) {
+          if (existingSwordAction && (existingSwordAction.action as SwordAction).targetId === playerId) {
             return { type: 'error', error: 'Нельзя защититься от того, кто уже атаковал вас' };
           }
         }
       }
 
-      player.useShield(shieldAction.targetId);
+      // Отметить использование щита (карта уже удалена из руки в revealCircleCards)
+      player.usedShield = true;
+      player.shieldTargetId = shieldAction.targetId || null;
       
       // Запись в историю
       const result = { 
@@ -521,9 +572,9 @@ export class PechenkaGame {
       this.history.push({
         playerId,
         action: shieldAction,
-      result,
-      timestamp: Date.now()
-    });
+        result,
+        timestamp: Date.now()
+      });
 
       return result;
     }
@@ -658,6 +709,36 @@ export class PechenkaGame {
    * Получить полное состояние игры (без приватной информации)
    */
   getGameState(): GameStateData {
+    // Собрать информацию о выложенных картах в текущем круге
+    const playedCards: PlayedCardInfo[] = [];
+    let order = 0;
+    
+    // Сначала добавить вскрытые карты (видимые всем)
+    this.revealedCircleCards.forEach((card, playerId) => {
+      const player = this.players.find(p => p.id === playerId);
+      playedCards.push({
+        playerId,
+        playerName: player?.name || 'Unknown',
+        cardType: card.type as 'hint' | 'sword' | 'shield' | 'hill',
+        cardValue: card.value,
+        order: order++
+      });
+    });
+    
+    // Добавить карты, которые еще не вскрыты (показать как hidden)
+    this.circleCards.forEach(({ cardIndex, action }, playerId) => {
+      // Не добавлять, если карта уже вскрыта
+      if (this.revealedCircleCards.has(playerId)) return;
+      
+      const player = this.players.find(p => p.id === playerId);
+      playedCards.push({
+        playerId,
+        playerName: player?.name || 'Unknown',
+        cardType: 'hidden',
+        order: order++
+      });
+    });
+
     return {
       players: this.players.map(p => ({
         id: p.id,
@@ -670,7 +751,14 @@ export class PechenkaGame {
       })),
       currentRound: this.currentRound,
       currentPlayerIndex: this.currentPlayerIndex,
-      state: this.state
+      state: this.state,
+      circleInfo: {
+        currentCircle: this.currentCircle,
+        maxCircles: this.players.length,
+        playersPlaced: Array.from(this.circleCards.keys()),
+        playedCards
+      },
+      resolvingQueue: this.getResolvingQueue()
     };
   }
 

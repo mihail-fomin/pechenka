@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import { useWebSocket } from '../../hooks/useWebSocket';
-import { getGameInfo, startGame, getGameState, getPlayerPrivateState, addTestPlayers } from '../../services/api';
+import { getGameInfo, startGame, getGameState, getPlayerPrivateState, addTestPlayers, autoPlay } from '../../services/api';
 import { GameStateData, PrivatePlayerState, Action, Card } from '../../types/game.types';
 import GameBoard from './GameBoard';
 import PlayerHand from './PlayerHand';
+import PlayedCardsBoard from './PlayedCardsBoard';
 import TargetSelectionModal from './TargetSelectionModal';
 import RoundSummary from './RoundSummary';
 import GameEnd from './GameEnd';
@@ -114,6 +115,30 @@ const GameRoom = () => {
       setGameInfo(info);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Ошибка добавления тестовых игроков');
+    }
+  };
+
+  // Автоход случайной картой для текущего игрока
+  const handleAutoPlaySelf = async () => {
+    if (!gameId || !playerId) return;
+
+    try {
+      await autoPlay(gameId, { playerId });
+      requestState();
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Ошибка автохода');
+    }
+  };
+
+  // Автоход случайными картами для всех игроков
+  const handleAutoPlayAll = async () => {
+    if (!gameId) return;
+
+    try {
+      await autoPlay(gameId, { allPlayers: true });
+      requestState();
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Ошибка автохода');
     }
   };
 
@@ -266,6 +291,58 @@ const GameRoom = () => {
           </div>
 
           <GameBoard gameState={gameState} currentPlayerId={playerId} />
+
+          {/* Доска с выложенными картами */}
+          {gameState.circleInfo && gameState.state === 'circle_phase' && (
+            <PlayedCardsBoard 
+              circleInfo={gameState.circleInfo}
+              currentPlayerId={playerId}
+              totalPlayers={gameState.players.length}
+            />
+          )}
+
+          {/* Тестовые кнопки для симуляции игры (только в dev режиме) */}
+          {import.meta.env.DEV && (gameState.state === 'circle_phase' || gameState.state === 'resolving_phase') && (
+            <div className="test-controls">
+              <div className="test-controls-header">🧪 Тестовый режим</div>
+              <div className="test-controls-buttons">
+                {gameState.state === 'circle_phase' && (
+                  <>
+                    <button
+                      className="btn btn-test"
+                      onClick={handleAutoPlaySelf}
+                      disabled={gameState.circleInfo?.playersPlaced.includes(playerId)}
+                    >
+                      🎲 Мой случайный ход
+                    </button>
+                    <button
+                      className="btn btn-test-all"
+                      onClick={handleAutoPlayAll}
+                      disabled={gameState.circleInfo?.playersPlaced.length === gameState.players.length}
+                    >
+                      🎯 Автоход всех игроков
+                    </button>
+                  </>
+                )}
+                {gameState.state === 'resolving_phase' && (
+                  <>
+                    <button
+                      className="btn btn-test"
+                      onClick={handleAutoPlaySelf}
+                    >
+                      🎲 Мой автоход (раскрытие)
+                    </button>
+                    <button
+                      className="btn btn-test-all"
+                      onClick={handleAutoPlayAll}
+                    >
+                      🎯 Автораскрытие всех
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
 
           {privateState && (
             <>

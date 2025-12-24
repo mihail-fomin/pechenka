@@ -47,3 +47,4 @@ const CardPreviewModal = ({ isOpen, card, onClose }: CardPreviewModalProps) => {
 
 export default CardPreviewModal;
 
+
