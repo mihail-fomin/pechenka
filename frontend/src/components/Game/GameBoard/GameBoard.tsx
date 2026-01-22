@@ -1,5 +1,10 @@
 import { GameStateData } from '../../../types/game.types';
 import './GameBoard.css';
+// Иконки действий
+const ACTION_ICONS = {
+  sword: '/images/cards/sword.svg',
+  shield: '/images/cards/shield.svg',
+};
 interface GameBoardProps {
   gameState: GameStateData;
   currentPlayerId: string;
@@ -26,8 +31,8 @@ const GameBoard = ({ gameState, currentPlayerId }: GameBoardProps) => {
             <div className="player-name">{player.name}</div>
             <div className="player-coins">💰 {player.coins}</div>
             <div className="player-hand-size">Карт: {player.handSize}</div>
-            {player.usedSword && <div className="action-badge sword">⚔️</div>}
-            {player.usedShield && <div className="action-badge shield">🛡️</div>}
+            {player.usedSword && <img src={ACTION_ICONS.sword} alt="Меч" className="action-badge-img sword" />}
+            {player.usedShield && <img src={ACTION_ICONS.shield} alt="Щит" className="action-badge-img shield" />}
             {player.revealedCards.length > 0 && (
               <div className="revealed-cards">
                 {player.revealedCards.map((card, i) => (

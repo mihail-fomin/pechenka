@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Основа щита/двери -->
+  <rect x="15" y="10" width="70" height="85" rx="5" fill="#4169e1"/>
+  <!-- Внутренняя рамка -->
+  <rect x="20" y="15" width="60" height="75" rx="3" fill="#5178e8"/>
+  <!-- Металлические уголки -->
+  <path d="M15 10 L30 10 L30 25 L15 25 Z" fill="#555"/>
+  <path d="M85 10 L70 10 L70 25 L85 25 Z" fill="#555"/>
+  <path d="M15 95 L30 95 L30 80 L15 80 Z" fill="#555"/>
+  <path d="M85 95 L70 95 L70 80 L85 80 Z" fill="#555"/>
+  <!-- Заклёпки -->
+  <circle cx="22" cy="17" r="3" fill="#888"/>
+  <circle cx="78" cy="17" r="3" fill="#888"/>
+  <circle cx="22" cy="88" r="3" fill="#888"/>
+  <circle cx="78" cy="88" r="3" fill="#888"/>
+  <!-- Центральный круг (иллюминатор) -->
+  <circle cx="50" cy="52" r="18" fill="#555"/>
+  <circle cx="50" cy="52" r="15" fill="#2e7d32"/>
+  <circle cx="50" cy="52" r="12" fill="#4caf50"/>
+  <!-- Блик на иллюминаторе -->
+  <ellipse cx="45" cy="47" rx="5" ry="4" fill="#81c784" opacity="0.6"/>
+  <!-- Пузырьки внутри -->
+  <circle cx="55" cy="55" r="2" fill="#a5d6a7" opacity="0.5"/>
+  <circle cx="48" cy="58" r="1.5" fill="#a5d6a7" opacity="0.5"/>
+  <!-- Текстура двери -->
+  <line x1="20" y1="35" x2="80" y2="35" stroke="#4169e1" stroke-width="2" opacity="0.5"/>
+  <line x1="20" y1="70" x2="80" y2="70" stroke="#4169e1" stroke-width="2" opacity="0.5"/>
+</svg>

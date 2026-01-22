@@ -1,5 +1,12 @@
 import { Card } from '../../../types/game.types';
 import './PlayerHand.css';
+// Иконки карт
+const CARD_ICONS = {
+  sword: '/images/cards/sword.svg',
+  shield: '/images/cards/shield.svg',
+  hill: '/images/cards/hill.svg',
+  hint: '/images/cards/hint.svg',
+};
 interface PlayerHandProps {
   hand: Card[];
   onCardClick?: (card: Card, index: number) => void;
@@ -55,21 +62,21 @@ const PlayerHand = ({
                 )}
                 {card.type === 'sword' && (
                   <div className="card-content">
-                    <div className="card-icon">⚔️</div>
+                    <img src={CARD_ICONS.sword} alt="Меч" className="card-icon-img" />
                     <div className="card-type">Меч</div>
                     {usedSword && <div className="card-used">Использован</div>}
                   </div>
                 )}
                 {card.type === 'shield' && (
                   <div className="card-content">
-                    <div className="card-icon">🛡️</div>
+                    <img src={CARD_ICONS.shield} alt="Щит" className="card-icon-img" />
                     <div className="card-type">Щит</div>
                     {usedShield && <div className="card-used">Использован</div>}
                   </div>
                 )}
                 {card.type === 'hill' && (
                   <div className="card-content">
-                    <div className="card-icon">⛰️</div>
+                    <img src={CARD_ICONS.hill} alt="Холм" className="card-icon-img" />
                     <div className="card-type">Холм</div>
                   </div>
                 )}

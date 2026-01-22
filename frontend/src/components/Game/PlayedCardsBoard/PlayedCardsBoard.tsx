@@ -1,5 +1,13 @@
 import { CircleInfo } from '../../../types/game.types';
 import './PlayedCardsBoard.css';
+// Иконки карт
+const CARD_ICONS = {
+  sword: '/images/cards/sword.svg',
+  shield: '/images/cards/shield.svg',
+  hill: '/images/cards/hill.svg',
+  hint: '/images/cards/hint.svg',
+  hidden: '/images/cards/card-back.svg',
+};
 interface PlayedCardsBoardProps {
   circleInfo: CircleInfo;
   currentPlayerId: string;
@@ -49,17 +57,16 @@ const PlayedCardsBoard = ({ circleInfo, currentPlayerId, totalPlayers }: PlayedC
                   >
                     {card.cardType === 'hidden' ? (
                       <div className="card-back">
-                        <div className="card-back-pattern">❓</div>
+                        <img src={CARD_ICONS.hidden} alt="Скрытая карта" className="card-back-img" />
                         <div className="player-label">{card.playerName}</div>
                       </div>
                     ) : (
                       <div className="card-front">
-                        <div className="card-icon">
-                          {card.cardType === 'hint' && '📜'}
-                          {card.cardType === 'sword' && '⚔️'}
-                          {card.cardType === 'shield' && '🛡️'}
-                          {card.cardType === 'hill' && '⛰️'}
-                        </div>
+                        <img 
+                          src={CARD_ICONS[card.cardType as keyof typeof CARD_ICONS]} 
+                          alt={card.cardType} 
+                          className="card-icon-img" 
+                        />
                         {card.cardType === 'hint' && card.cardValue && (
                           <div className="card-value">{card.cardValue}</div>
                         )}

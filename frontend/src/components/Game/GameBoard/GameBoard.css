@@ -57,6 +57,20 @@
   right: 10px;
   font-size: 20px;
 }
+.action-badge-img {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+.action-badge-img.sword {
+  right: 40px;
+}
+.action-badge-img.shield {
+  right: 8px;
+}
 .revealed-cards {
   display: flex;
   flex-wrap: wrap;

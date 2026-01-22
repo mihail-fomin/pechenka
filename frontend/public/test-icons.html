@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест иконок - Печенька</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: white;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+        h2 {
+            text-align: center;
+            margin: 30px 0 20px;
+            color: #8bc34a;
+        }
+        .icons-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .icon-card {
+            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            border-radius: 16px;
+            padding: 20px;
+            width: 180px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .icon-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .icon-card img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+        }
+        .icon-card h3 {
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        .character-card {
+            border-color: #667eea;
+        }
+        .action-card.sword {
+            border-color: #f5576c;
+            background: linear-gradient(145deg, #f093fb22 0%, #f5576c22 100%);
+        }
+        .action-card.shield {
+            border-color: #4facfe;
+            background: linear-gradient(145deg, #4facfe22 0%, #00f2fe22 100%);
+        }
+        .action-card.hill {
+            border-color: #a8edea;
+            background: linear-gradient(145deg, #a8edea22 0%, #fed6e322 100%);
+        }
+        .action-card.hint {
+            border-color: #764ba2;
+            background: linear-gradient(145deg, #667eea22 0%, #764ba222 100%);
+        }
+        .action-card.back {
+            border-color: #8bc34a;
+            background: linear-gradient(145deg, #8bc34a22 0%, #66bb6a22 100%);
+        }
+    </style>
+</head>
+<body>
+    <h1>🍪 Иконки игры "Печенька"</h1>
+    
+    <h2>Персонажи</h2>
+    <div class="icons-grid">
+        <div class="icon-card character-card">
+            <img src="/images/characters/pechenka.svg" alt="Печенька">
+            <h3>Печенька</h3>
+        </div>
+        <div class="icon-card character-card">
+            <img src="/images/characters/blue.svg" alt="Синий">
+            <h3>Синий</h3>
+        </div>
+        <div class="icon-card character-card">
+            <img src="/images/characters/strontium.svg" alt="Стронций">
+            <h3>Стронций</h3>
+        </div>
+        <div class="icon-card character-card">
+            <img src="/images/characters/thirtyseven.svg" alt="37">
+            <h3>37</h3>
+        </div>
+        <div class="icon-card character-card">
+            <img src="/images/characters/persians.svg" alt="Персы">
+            <h3>Персы</h3>
+        </div>
+        <div class="icon-card character-card">
+            <img src="/images/characters/cosinus.svg" alt="Косинус">
+            <h3>Косинус</h3>
+        </div>
+    </div>
+    
+    <h2>Карты действий</h2>
+    <div class="icons-grid">
+        <div class="icon-card action-card sword">
+            <img src="/images/cards/sword.svg" alt="Меч">
+            <h3>Меч</h3>
+        </div>
+        <div class="icon-card action-card shield">
+            <img src="/images/cards/shield.svg" alt="Щит">
+            <h3>Щит</h3>
+        </div>
+        <div class="icon-card action-card hill">
+            <img src="/images/cards/hill.svg" alt="Холм">
+            <h3>Холм</h3>
+        </div>
+        <div class="icon-card action-card hint">
+            <img src="/images/cards/hint.svg" alt="Подсказка">
+            <h3>Подсказка</h3>
+        </div>
+        <div class="icon-card action-card back">
+            <img src="/images/cards/card-back.svg" alt="Рубашка карты">
+            <h3>Рубашка карты</h3>
+        </div>
+    </div>
+</body>
+</html>

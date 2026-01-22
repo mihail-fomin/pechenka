@@ -96,6 +96,12 @@
   font-size: 40px;
   margin-bottom: 8px;
 }
+.card-icon-img {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 8px;
+  object-fit: contain;
+}
 .card-type {
   font-size: 12px;
   font-weight: bold;
@@ -112,6 +118,11 @@
     font-size: 32px;
     margin-bottom: 6px;
   }
+  .card-icon-img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 6px;
+  }
   .card-type {
     font-size: 10px;
     margin-bottom: 4px;
@@ -123,6 +134,10 @@
 @media (max-width: 360px) {
   .card-icon {
     font-size: 28px;
+  }
+  .card-icon-img {
+    width: 35px;
+    height: 35px;
   }
   .card-type {
     font-size: 9px;

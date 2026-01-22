@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Левый камень -->
+  <path d="M15 75 L10 55 L20 40 L35 45 L40 60 L30 75 Z" fill="#6b6b6b"/>
+  <path d="M15 75 L10 55 L20 40 L25 50 L20 65 Z" fill="#7a7a7a"/>
+  <!-- Ножки левого камня -->
+  <rect x="18" y="73" width="5" height="10" rx="1" fill="#5a5a5a"/>
+  <rect x="28" y="73" width="5" height="10" rx="1" fill="#5a5a5a"/>
+  <!-- Правый камень -->
+  <path d="M65 75 L60 55 L70 40 L85 45 L90 60 L80 75 Z" fill="#6b6b6b"/>
+  <path d="M65 75 L60 55 L70 40 L75 50 L70 65 Z" fill="#7a7a7a"/>
+  <!-- Ножки правого камня -->
+  <rect x="68" y="73" width="5" height="10" rx="1" fill="#5a5a5a"/>
+  <rect x="78" y="73" width="5" height="10" rx="1" fill="#5a5a5a"/>
+  <!-- Табличка -->
+  <rect x="35" y="25" width="30" height="40" rx="2" fill="#f5f5dc"/>
+  <rect x="37" y="27" width="26" height="36" fill="white" stroke="#888" stroke-width="1"/>
+  <!-- Надпись Sr -->
+  <text x="50" y="52" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#333">Sr</text>
+  <!-- Атомный номер -->
+  <text x="55" y="33" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#666">38</text>
+  <!-- Палка таблички -->
+  <rect x="48" y="65" width="4" height="20" fill="#8b4513"/>
+  <!-- Глаза на камнях -->
+  <circle cx="22" cy="52" r="4" fill="white"/>
+  <circle cx="32" cy="50" r="4" fill="white"/>
+  <circle cx="23" cy="53" r="2" fill="#222"/>
+  <circle cx="33" cy="51" r="2" fill="#222"/>
+  <circle cx="72" cy="52" r="4" fill="white"/>
+  <circle cx="82" cy="50" r="4" fill="white"/>
+  <circle cx="73" cy="53" r="2" fill="#222"/>
+  <circle cx="83" cy="51" r="2" fill="#222"/>
+</svg>

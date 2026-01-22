@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Лезвие сабли -->
+  <path d="M75 15 Q85 20 88 30 Q90 45 85 60 Q75 80 55 90 Q50 92 48 88 Q65 78 72 60 Q78 45 75 30 Q73 22 75 15 Z" 
+        fill="#c0c0c0"/>
+  <!-- Блик на лезвии -->
+  <path d="M77 20 Q82 25 84 35 Q85 50 80 65 Q75 75 65 82" 
+        fill="none" stroke="#e8e8e8" stroke-width="3" opacity="0.7"/>
+  <!-- Зазубрины на лезвии -->
+  <path d="M72 60 L68 58 L72 55 L69 52 L73 48 L70 45 L74 42 L71 38 L75 35" 
+        fill="none" stroke="#a0a0a0" stroke-width="2" stroke-linecap="round"/>
+  <!-- Гарда -->
+  <ellipse cx="50" cy="88" rx="12" ry="4" fill="#c9a227"/>
+  <rect x="45" y="85" width="10" height="6" rx="1" fill="#c9a227"/>
+  <!-- Рукоять -->
+  <rect x="42" y="88" width="8" height="10" rx="1" fill="#8b4513"/>
+  <!-- Обмотка рукояти -->
+  <line x1="43" y1="90" x2="49" y2="90" stroke="#654321" stroke-width="1.5"/>
+  <line x1="43" y1="93" x2="49" y2="93" stroke="#654321" stroke-width="1.5"/>
+  <line x1="43" y1="96" x2="49" y2="96" stroke="#654321" stroke-width="1.5"/>
+  <!-- Навершие -->
+  <circle cx="46" cy="100" r="5" fill="#8b4513"/>
+  <circle cx="46" cy="100" r="3" fill="#654321"/>
+</svg>
