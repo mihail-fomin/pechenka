@@ -32,7 +32,7 @@ const PlayerHand = ({
     if (!isCurrentTurn) return false;
     if (card.type === 'sword' && usedSword) return false;
     if (card.type === 'shield' && usedShield) return false;
-    return card.type === 'hint' || card.type === 'sword' || card.type === 'shield';
+    return card.type === 'hint' || card.type === 'sword' || card.type === 'shield' || card.type === 'hill';
   };
 
   return (

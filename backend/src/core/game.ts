@@ -2,7 +2,7 @@
  * Главный класс игры "Печенька"
  */
 
-import { Character, getAllCharacters, getTarget, getHunter } from '../models/character';
+import { Character, getCharactersForPlayerCount, getTarget, getHunter } from '../models/character';
 import { Deck, Card } from '../models/deck';
 import { Player } from './player';
 import { Action, ActionResult, RevealAction, SwordAction, ShieldAction, HillAction } from '../models/actions';
@@ -200,14 +200,16 @@ export class PechenkaGame {
    * Раздать роли игрокам
    */
   private assignRoles(): void {
-    const allCharacters = getAllCharacters();
-    const availableCharacters = shuffleArray(
-      allCharacters.slice(0, this.players.length),
+    const playerCount = this.players.length;
+    // Получить персонажей для текущего количества игроков
+    const availableCharacters = getCharactersForPlayerCount(playerCount);
+    const shuffledCharacters = shuffleArray(
+      availableCharacters,
       this.random.randomInt(0, 1000000)
     );
-
     this.players.forEach((player, index) => {
-      player.assignRole(availableCharacters[index]);
+      player.playerCount = playerCount; // Установить количество игроков для цепочки охоты
+      player.assignRole(shuffledCharacters[index]);
       this.log(`Игрок ${player.name} получил роль: ${player.role}`);
     });
   }
@@ -215,36 +217,25 @@ export class PechenkaGame {
   /**
    * Раздать карты игрокам
    * Каждый игрок получает:
-   * - Подсказки всех других персонажей (кроме своего) - по одной каждого
+   * - Подсказки всех персонажей КРОМЕ своей роли (по одной каждого)
    * - 1 карту Меча
    * - 1 карту Щита
    * - 1 карту Холма (если играет не 6 человек)
    */
   private dealCards(): void {
-    this.deck = new Deck(this.players.length);
-    this.deck.shuffle(this.random.randomInt(0, 1000000));
-
-    const allCharacters = getAllCharacters();
     const playerCount = this.players.length;
-
-    // Определить, какие персонажи будут в подсказках (исключаем Жёлтый, Зелёный, Синий и Красный)
-    const excludedCharacters = [
-      Character.YELLOW,
-      Character.GREEN,
-      Character.BLUE,
-      Character.RED
-    ];
-    const availableHintCharacters = allCharacters.filter(
-      char => !excludedCharacters.includes(char)
-    );
-
+    this.deck = new Deck(playerCount);
+    this.deck.shuffle(this.random.randomInt(0, 1000000));
+    // Получить доступных персонажей для данного количества игроков
+    const availableCharacters = getCharactersForPlayerCount(playerCount);
     this.players.forEach((player) => {
       const playerCards: Card[] = [];
-
-      // 1. Подсказки для всех доступных персонажей (одинаковое количество для всех игроков)
-      // Каждый игрок получает по одной подсказке каждого доступного персонажа
-      for (const character of availableHintCharacters) {
-        // Найти карту-подсказку этого персонажа в колоде
+      // 1. Подсказки для всех доступных персонажей КРОМЕ своей роли
+      // Согласно правилам: "Уберите из своего комплекта карт такого же персонажа"
+      for (const character of availableCharacters) {
+        if (character === player.role) {
+          continue; // Пропускаем подсказку своей роли
+        }
         const hintIndex = this.deck!.cards.findIndex(
           card => card.isHint() && card.value === character
         );
@@ -252,27 +243,23 @@ export class PechenkaGame {
           playerCards.push(this.deck!.cards.splice(hintIndex, 1)[0]);
         }
       }
-
       // 2. Одна карта Меча
       const swordIndex = this.deck!.cards.findIndex(card => card.isSword());
       if (swordIndex !== -1) {
         playerCards.push(this.deck!.cards.splice(swordIndex, 1)[0]);
       }
-
       // 3. Одна карта Щита
       const shieldIndex = this.deck!.cards.findIndex(card => card.isShield());
       if (shieldIndex !== -1) {
         playerCards.push(this.deck!.cards.splice(shieldIndex, 1)[0]);
       }
-
       // 4. Одна карта Холма (если играет не 6 человек)
       if (playerCount < 6) {
-      const hillIndex = this.deck!.cards.findIndex(card => card.isHill());
-      if (hillIndex !== -1) {
-        playerCards.push(this.deck!.cards.splice(hillIndex, 1)[0]);
+        const hillIndex = this.deck!.cards.findIndex(card => card.isHill());
+        if (hillIndex !== -1) {
+          playerCards.push(this.deck!.cards.splice(hillIndex, 1)[0]);
         }
       }
-
       // Перемешать карты игрока для случайного порядка
       const shuffledCards = shuffleArray(playerCards, this.random.randomInt(0, 1000000));
       player.addCards(shuffledCards);

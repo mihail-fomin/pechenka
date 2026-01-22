@@ -16,6 +16,7 @@ export class Player {
   public usedSword: boolean = false;
   public usedShield: boolean = false;
   public shieldTargetId: string | null = null; // ID игрока, от которого защитились
+  public playerCount: number = 4; // Количество игроков для расчета цепочки охоты
 
   constructor(
     public id: string,
@@ -103,7 +104,7 @@ export class Player {
     if (!this.role) {
       return null;
     }
-    return getTarget(this.role);
+    return getTarget(this.role, this.playerCount);
   }
 
   /**
@@ -114,7 +115,7 @@ export class Player {
     if (!this.role) {
       return null;
     }
-    return getHunter(this.role);
+    return getHunter(this.role, this.playerCount);
   }
 
   /**

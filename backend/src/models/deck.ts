@@ -2,7 +2,7 @@
  * Колода карт и карты игры
  */
 
-import { Character, getAllCharacters } from './character';
+import { Character, getCharactersForPlayerCount } from './character';
 
 /**
  * Тип карты
@@ -86,74 +86,32 @@ export class Deck {
   }
 
   /**
-   * Определить, какие персонажи нужно исключить в зависимости от количества игроков
-   * Согласно правилам:
-   * - Если играет 4 человека, удалите Персов и Косинуса
-   * - Если играет 5 человек, удалите Косинуса
-   * - Если играет 6 человек, все персонажи доступны
-   * @param playerCount - Количество игроков
-   * @returns Массив исключаемых персонажей
-   */
-  private getExcludedCharacters(playerCount: number): Character[] {
-    const excluded: Character[] = [];
-    
-    // TODO: Определить, какие персонажи из enum Character соответствуют "Персам" и "Косинусу"
-    // После определения заменить комментарии на соответствующие значения из enum Character
-    // Например:
-    // const PERSIANS = Character.???; // Персы
-    // const COSINE = Character.???; // Косинус
-    
-    if (playerCount === 4) {
-      // Исключить Персов и Косинуса
-      // excluded.push(PERSIANS, COSINE);
-    } else if (playerCount === 5) {
-      // Исключить Косинуса
-      // excluded.push(COSINE);
-    }
-    // Если playerCount === 6, все персонажи доступны
-    
-    return excluded;
-  }
-
-  /**
    * Инициализация колоды
    * @param playerCount - Количество игроков
    */
   private initialize(playerCount: number): void {
     this.cards = [];
-
-    // Создать карты-подсказки для раздачи игрокам
-    // Каждый игрок получит по одной подсказке каждого доступного персонажа
-    const allCharacters = getAllCharacters();
-    
-    // Определить, какие персонажи нужно исключить в зависимости от количества игроков
+    // Получить доступных персонажей для данного количества игроков
     // Согласно правилам:
-    // - Если играет 4 человека, удалите Персов и Косинуса
-    // - Если играет 5 человек, удалите Косинуса
-    // - Если играет 6 человек, все персонажи доступны
-    const excludedCharacters = this.getExcludedCharacters(playerCount);
-    const availableHintCharacters = allCharacters.filter(
-      char => !excludedCharacters.includes(char)
-    );
-
+    // - Если играет 4 человека: Печенька, Синий, Стронций, 37
+    // - Если играет 5 человек: + Персы
+    // - Если играет 6 человек: + Косинус (все персонажи)
+    const availableCharacters = getCharactersForPlayerCount(playerCount);
     // Создаем по playerCount подсказок для каждого доступного персонажа
     const hintsPerCharacter = playerCount;
-    availableHintCharacters.forEach(character => {
+    availableCharacters.forEach(character => {
       for (let i = 0; i < hintsPerCharacter; i++) {
         this.cards.push(new Card('hint', character));
       }
     });
-
     // Создать playerCount карт Меча (по одной на игрока)
     for (let i = 0; i < playerCount; i++) {
       this.cards.push(new Card('sword', null));
     }
-
     // Создать playerCount карт Щита (по одной на игрока)
     for (let i = 0; i < playerCount; i++) {
       this.cards.push(new Card('shield', null));
     }
-
     // Создать playerCount карт Холма (по одной на игрока)
     // Если играет 6 человек, карты холма не создаются
     if (playerCount < 6) {

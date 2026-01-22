@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { GameStateData, PrivatePlayerState, Action } from '../types/game.types';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:1107';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
 
 interface UseWebSocketOptions {
   gameId: string;

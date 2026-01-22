@@ -10,6 +10,7 @@ import PlayedCardsBoard from './PlayedCardsBoard';
 import TargetSelectionModal from './TargetSelectionModal';
 import RoundSummary from './RoundSummary';
 import GameEnd from './GameEnd';
+import HuntChainHint from './HuntChainHint';
 import './GameRoom.css';
 
 const GameRoom = () => {
@@ -194,6 +195,14 @@ const GameRoom = () => {
       }, 100);
       return;
     }
+    // Обработка холма - сохраняем выбор, показываем визуально (как подсказка)
+    if (card.type === 'hill') {
+      setSelectedCardIndex(index);
+      setPendingAction({
+        type: 'hill',
+      });
+      return;
+    }
   };
 
   const handleModalConfirm = () => {
@@ -285,11 +294,30 @@ const GameRoom = () => {
         <>
           <div className="game-header">
             <h2>Раунд {gameState.currentRound}</h2>
-            <div className="connection-status">
-              {connected ? '🟢 Подключено' : '🔴 Отключено'}
+            <div className="game-header-actions">
+              <HuntChainHint playerCount={gameState.players.length} />
+              <div className="connection-status">
+                {connected ? '🟢 Подключено' : '🔴 Отключено'}
+              </div>
             </div>
           </div>
-
+          {/* Карточка роли игрока (секретная информация) */}
+          {privateState && (
+            <div className="player-role-card">
+              <div className="role-card-secret">🔒 Ваша секретная роль</div>
+              <div className="role-card-name">{privateState.role}</div>
+              <div className="role-card-targets">
+                <div className="role-target">
+                  <span className="target-label">🎯 Цель:</span>
+                  <span className="target-name">{privateState.target}</span>
+                </div>
+                <div className="role-hunter">
+                  <span className="hunter-label">⚔️ Охотник:</span>
+                  <span className="hunter-name">{privateState.hunter}</span>
+                </div>
+              </div>
+            </div>
+          )}
           <GameBoard gameState={gameState} currentPlayerId={playerId} />
 
           {/* Доска с выложенными картами */}
@@ -385,6 +413,11 @@ const GameRoom = () => {
                     {pendingAction.type === 'shield' && 'targetId' in pendingAction && (
                       <div className="selected-action">
                         <span>Защититься от: {gameState.players.find(p => p.id === pendingAction.targetId)?.name || '?'}</span>
+                      </div>
+                    )}
+                    {pendingAction.type === 'hill' && (
+                      <div className="selected-action">
+                        <span>Выложить карту Холма ⛰️</span>
                       </div>
                     )}
                   </div>

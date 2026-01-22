@@ -1,0 +1,162 @@
+.hunt-chain-hint-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+}
+
+.hunt-chain-hint-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.hunt-chain-hint-button:active {
+  transform: translateY(0);
+}
+
+.hint-icon {
+  font-size: 16px;
+}
+
+.hint-text {
+  white-space: nowrap;
+}
+
+/* Модальное окно */
+.hunt-chain-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.hunt-chain-modal {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  max-width: 400px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hunt-chain-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hunt-chain-header h3 {
+  margin: 0;
+  color: #ffd700;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.hunt-chain-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.hunt-chain-close:hover {
+  background: rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+}
+
+.hunt-chain-content {
+  padding: 20px;
+}
+
+.hunt-chain-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hunt-chain-legend {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.hunt-chain-legend p {
+  margin: 0;
+}
+
+.hunt-chain-legend p + p {
+  margin-top: 6px;
+}
+
+.hunt-chain-legend strong {
+  color: #ffd700;
+}
+
+@media (max-width: 480px) {
+  .hunt-chain-modal {
+    max-width: 100%;
+    margin: 10px;
+  }
+  
+  .hunt-chain-hint-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .hint-icon {
+    font-size: 14px;
+  }
+}
