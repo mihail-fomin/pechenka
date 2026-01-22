@@ -11,7 +11,6 @@
   z-index: 2000;
   animation: fadeIn 0.2s ease-in;
 }
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -20,12 +19,10 @@
     opacity: 1;
   }
 }
-
 .card-preview-content {
   position: relative;
   animation: scaleIn 0.3s ease-out;
 }
-
 @keyframes scaleIn {
   from {
     transform: scale(0.5);
@@ -36,7 +33,6 @@
     opacity: 1;
   }
 }
-
 .card-preview-close {
   position: absolute;
   top: -40px;
@@ -56,12 +52,10 @@
   transition: all 0.2s;
   z-index: 10;
 }
-
 .card-preview-close:hover {
   background: white;
   transform: rotate(90deg);
 }
-
 .card-preview-large {
   width: 300px;
   height: 420px;
@@ -74,38 +68,31 @@
   position: relative;
   overflow: hidden;
 }
-
 .card-preview-large.hint {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
-
 .card-preview-large.sword {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: white;
 }
-
 .card-preview-large.shield {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
   color: white;
 }
-
 .card-preview-large.hill {
   background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
   color: #333;
 }
-
 .card-preview-body {
   text-align: center;
   padding: 40px;
   width: 100%;
 }
-
 .card-preview-icon {
   font-size: 120px;
   margin-bottom: 20px;
 }
-
 .card-preview-type {
   font-size: 24px;
   font-weight: bold;
@@ -113,10 +100,7 @@
   text-transform: uppercase;
   letter-spacing: 2px;
 }
-
 .card-preview-value {
   font-size: 48px;
   font-weight: bold;
 }
-
-

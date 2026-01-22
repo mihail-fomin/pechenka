@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { GameStateData, PrivatePlayerState, Action } from '../../types/game.types';
+import { GameStateData, PrivatePlayerState, Action } from '../../../types/game.types';
 import './ActionButtons.css';
-
 interface ActionButtonsProps {
   gameState: GameStateData;
   privateState: PrivatePlayerState;
   currentPlayerId: string;
   onAction: (action: Action) => void;
 }
-
 const ActionButtons = ({
   gameState,
   privateState,
@@ -18,9 +16,7 @@ const ActionButtons = ({
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
   const [selectedTarget, setSelectedTarget] = useState<string | null>(null);
   const [actionType, setActionType] = useState<'reveal' | 'sword' | 'shield' | null>(null);
-
   const currentPlayer = gameState.players.find((p) => p.id === currentPlayerId);
-
   if (!currentPlayer || gameState.currentPlayerIndex !== gameState.players.findIndex((p) => p.id === currentPlayerId)) {
     return (
       <div className="action-buttons">
@@ -28,7 +24,6 @@ const ActionButtons = ({
       </div>
     );
   }
-
   const handleReveal = () => {
     if (selectedCardIndex !== null) {
       const card = privateState.hand[selectedCardIndex];
@@ -42,7 +37,6 @@ const ActionButtons = ({
       }
     }
   };
-
   const handleSword = () => {
     if (selectedTarget) {
       onAction({
@@ -53,27 +47,21 @@ const ActionButtons = ({
       setActionType(null);
     }
   };
-
   const handleShield = () => {
     onAction({
       type: 'shield',
     });
     setActionType(null);
   };
-
   const hintCards = privateState.hand
     .map((card, index) => ({ card, index }))
     .filter(({ card }) => card.type === 'hint');
-
   const hasSword = privateState.hand.some((card) => card.type === 'sword');
   const hasShield = privateState.hand.some((card) => card.type === 'shield');
-
   const availableTargets = gameState.players.filter((p) => p.id !== currentPlayerId);
-
   return (
     <div className="action-buttons">
       <h3>Выберите действие</h3>
-
       <div className="action-options">
         {hintCards.length > 0 && (
           <button
@@ -83,7 +71,6 @@ const ActionButtons = ({
             Вскрыть подсказку
           </button>
         )}
-
         {hasSword && !currentPlayer.usedSword && (
           <button
             className={`btn-action ${actionType === 'sword' ? 'active' : ''}`}
@@ -92,7 +79,6 @@ const ActionButtons = ({
             Использовать меч
           </button>
         )}
-
         {hasShield && !currentPlayer.usedShield && (
           <button
             className={`btn-action ${actionType === 'shield' ? 'active' : ''}`}
@@ -102,7 +88,6 @@ const ActionButtons = ({
           </button>
         )}
       </div>
-
       {actionType === 'reveal' && (
         <div className="action-details">
           <p>Выберите карту-подсказку:</p>
@@ -126,7 +111,6 @@ const ActionButtons = ({
           </button>
         </div>
       )}
-
       {actionType === 'sword' && (
         <div className="action-details">
           <p>Выберите цель для атаки:</p>
@@ -150,7 +134,6 @@ const ActionButtons = ({
           </button>
         </div>
       )}
-
       {actionType === 'shield' && (
         <div className="action-details">
           <p>Использовать щит для защиты?</p>
@@ -162,7 +145,4 @@ const ActionButtons = ({
     </div>
   );
 };
-
 export default ActionButtons;
-
-

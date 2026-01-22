@@ -1,14 +1,11 @@
-import { GameStateData } from '../../types/game.types';
+import { GameStateData } from '../../../types/game.types';
 import './GameBoard.css';
-
 interface GameBoardProps {
   gameState: GameStateData;
   currentPlayerId: string;
 }
-
 const GameBoard = ({ gameState, currentPlayerId }: GameBoardProps) => {
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
-
   return (
     <div className="game-board">
       <div className="current-turn">
@@ -18,7 +15,6 @@ const GameBoard = ({ gameState, currentPlayerId }: GameBoardProps) => {
           <p>Ход игрока: {currentPlayer.name}</p>
         )}
       </div>
-
       <div className="players-grid">
         {gameState.players.map((player, index) => (
           <div
@@ -47,7 +43,4 @@ const GameBoard = ({ gameState, currentPlayerId }: GameBoardProps) => {
     </div>
   );
 };
-
 export default GameBoard;
-
-

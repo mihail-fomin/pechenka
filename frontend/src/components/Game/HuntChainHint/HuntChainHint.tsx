@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import './HuntChainHint.css';
-
 interface HuntChainHintProps {
   playerCount: number;
 }
-
 const HuntChainHint = ({ playerCount }: HuntChainHintProps) => {
   const [isOpen, setIsOpen] = useState(false);
   // Ограничиваем количество игроков от 4 до 6
@@ -44,5 +42,4 @@ const HuntChainHint = ({ playerCount }: HuntChainHintProps) => {
     </>
   );
 };
-
 export default HuntChainHint;

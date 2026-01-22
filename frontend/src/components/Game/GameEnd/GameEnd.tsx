@@ -1,16 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { GameStateData } from '../../types/game.types';
+import { GameStateData } from '../../../types/game.types';
 import './GameEnd.css';
-
 interface GameEndProps {
   gameState: GameStateData;
 }
-
 const GameEnd = ({ gameState }: GameEndProps) => {
   const navigate = useNavigate();
   const sortedPlayers = [...gameState.players].sort((a, b) => b.coins - a.coins);
   const winner = sortedPlayers[0];
-
   return (
     <div className="game-end">
       <div className="game-end-container">
@@ -19,7 +16,6 @@ const GameEnd = ({ gameState }: GameEndProps) => {
           <h2>Победитель: {winner.name}</h2>
           <p className="winner-coins">💰 {winner.coins} монет</p>
         </div>
-
         <div className="final-scores">
           <h3>Итоговые результаты</h3>
           {sortedPlayers.map((player, index) => (
@@ -33,7 +29,6 @@ const GameEnd = ({ gameState }: GameEndProps) => {
             </div>
           ))}
         </div>
-
         <button className="btn-home" onClick={() => navigate('/')}>
           Вернуться в лобби
         </button>
@@ -41,7 +36,4 @@ const GameEnd = ({ gameState }: GameEndProps) => {
     </div>
   );
 };
-
 export default GameEnd;
-
-

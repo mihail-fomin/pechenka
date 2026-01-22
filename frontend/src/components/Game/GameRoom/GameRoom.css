@@ -4,37 +4,31 @@
   padding-bottom: 140px; /* Отступ снизу для карт */
   background: #f5f5f5;
 }
-
 @media (max-width: 480px) {
   .game-room {
     padding: 10px;
     padding-bottom: 120px;
   }
 }
-
 .game-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
-
 .game-header h2 {
   margin: 0;
   color: #333;
 }
-
 .game-header-actions {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
 .connection-status {
   font-size: 14px;
   color: #666;
 }
-
 /* Карточка секретной роли игрока */
 .player-role-card {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -48,7 +42,6 @@
   position: relative;
   overflow: hidden;
 }
-
 .player-role-card::before {
   content: '';
   position: absolute;
@@ -62,7 +55,6 @@
     transparent 70%);
   pointer-events: none;
 }
-
 .role-card-secret {
   font-size: 11px;
   color: rgba(255, 215, 0, 0.8);
@@ -71,7 +63,6 @@
   margin-bottom: 8px;
   font-weight: 600;
 }
-
 .role-card-name {
   font-size: 28px;
   font-weight: 800;
@@ -82,13 +73,11 @@
   margin-bottom: 12px;
   text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
 }
-
 .role-card-targets {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
 }
-
 .role-target,
 .role-hunter {
   display: flex;
@@ -98,57 +87,46 @@
   border-radius: 10px;
   font-size: 14px;
 }
-
 .role-target {
   background: linear-gradient(135deg, rgba(46, 213, 115, 0.2) 0%, rgba(46, 213, 115, 0.1) 100%);
   border: 1px solid rgba(46, 213, 115, 0.4);
 }
-
 .role-hunter {
   background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(255, 107, 107, 0.1) 100%);
   border: 1px solid rgba(255, 107, 107, 0.4);
 }
-
 .target-label {
   color: rgba(46, 213, 115, 0.9);
   font-weight: 600;
 }
-
 .target-name {
   color: #2ed573;
   font-weight: 700;
 }
-
 .hunter-label {
   color: rgba(255, 107, 107, 0.9);
   font-weight: 600;
 }
-
 .hunter-name {
   color: #ff6b6b;
   font-weight: 700;
 }
-
 @media (max-width: 480px) {
   .player-role-card {
     padding: 14px 16px;
   }
-  
   .role-card-name {
     font-size: 24px;
   }
-  
   .role-card-targets {
     flex-direction: column;
     gap: 10px;
   }
-  
   .role-target,
   .role-hunter {
     justify-content: center;
   }
 }
-
 .waiting-room {
   max-width: 500px;
   margin: 0 auto;
@@ -157,29 +135,24 @@
   border-radius: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-
 .waiting-room h2 {
   text-align: center;
   margin-bottom: 20px;
 }
-
 .players-list {
   margin: 20px 0;
 }
-
 .player-item {
   padding: 10px;
   margin: 5px 0;
   background: #f0f0f0;
   border-radius: 8px;
 }
-
 .error {
   text-align: center;
   padding: 40px;
   color: #c33;
 }
-
 .confirm-action-panel {
   background: white;
   padding: 20px;
@@ -193,26 +166,22 @@
   position: relative;
   z-index: 50;
 }
-
 @media (max-width: 480px) {
   .confirm-action-panel {
     padding: 15px;
     margin-bottom: 120px;
   }
 }
-
 .confirm-action-info {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
 .confirm-action-info p {
   margin: 0;
   font-weight: bold;
   color: #333;
 }
-
 .selected-action {
   padding: 12px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -220,7 +189,6 @@
   border-radius: 8px;
   font-weight: bold;
 }
-
 .btn-confirm-turn {
   padding: 15px 30px;
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -233,16 +201,13 @@
   transition: all 0.3s;
   box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
 }
-
 .btn-confirm-turn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
 }
-
 .btn-confirm-turn:active {
   transform: translateY(0);
 }
-
 /* Тестовые контролы */
 .test-controls {
   background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
@@ -251,7 +216,6 @@
   margin: 15px 0;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
-
 .test-controls-header {
   color: #ffeaa7;
   font-weight: bold;
@@ -260,14 +224,12 @@
   text-align: center;
   letter-spacing: 0.5px;
 }
-
 .test-controls-buttons {
   display: flex;
   gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
 }
-
 .btn-test {
   padding: 10px 18px;
   background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
@@ -280,18 +242,15 @@
   transition: all 0.3s;
   box-shadow: 0 3px 10px rgba(108, 92, 231, 0.3);
 }
-
 .btn-test:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
 }
-
 .btn-test:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
-
 .btn-test-all {
   padding: 10px 18px;
   background: linear-gradient(135deg, #e17055 0%, #fdcb6e 100%);
@@ -304,32 +263,25 @@
   transition: all 0.3s;
   box-shadow: 0 3px 10px rgba(225, 112, 85, 0.3);
 }
-
 .btn-test-all:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(225, 112, 85, 0.4);
 }
-
 .btn-test-all:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
-
 @media (max-width: 480px) {
   .test-controls {
     padding: 12px 15px;
   }
-
   .test-controls-buttons {
     flex-direction: column;
   }
-
   .btn-test,
   .btn-test-all {
     width: 100%;
     padding: 12px;
   }
 }
-
-

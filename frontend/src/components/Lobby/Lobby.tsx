@@ -3,26 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import { createGame, joinGame, getGameInfo, setTelegramUser } from '../../services/api';
 import './Lobby.css';
-
 const Lobby = () => {
   const { user, ready } = useTelegram();
   const navigate = useNavigate();
   const [gameId, setGameId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     if (user && ready) {
       setTelegramUser(user);
     }
   }, [user, ready]);
-
   const handleCreateGame = async () => {
     if (!user) return;
-
     setLoading(true);
     setError(null);
-
     try {
       const response = await createGame(user, 3);
       navigate(`/game/${response.gameId}`, {
@@ -34,17 +29,13 @@ const Lobby = () => {
       setLoading(false);
     }
   };
-
   const handleJoinGame = async () => {
     if (!user || !gameId.trim()) return;
-
     setLoading(true);
     setError(null);
-
     try {
       // Проверить, что игра существует
       await getGameInfo(gameId.trim());
-      
       const response = await joinGame(gameId.trim(), user);
       navigate(`/game/${gameId.trim()}`, {
         state: { playerId: response.playerId },
@@ -55,19 +46,15 @@ const Lobby = () => {
       setLoading(false);
     }
   };
-
   if (!ready) {
     return <div className="lobby">Загрузка...</div>;
   }
-
   return (
     <div className="lobby">
       <div className="lobby-container">
         <h1>🍪 Печенька</h1>
         <p className="lobby-subtitle">Игра на дедукцию и блеф</p>
-
         {error && <div className="error-message">{error}</div>}
-
         <div className="lobby-actions">
           <button
             className="btn btn-primary"
@@ -76,9 +63,7 @@ const Lobby = () => {
           >
             {loading ? 'Создание...' : 'Создать игру'}
           </button>
-
           <div className="divider">или</div>
-
           <div className="join-section">
             <input
               type="text"
@@ -97,7 +82,6 @@ const Lobby = () => {
             </button>
           </div>
         </div>
-
         <div className="lobby-info">
           <p>Игра для 4-6 игроков</p>
           <p>Каждый получает тайную роль и карты</p>
@@ -107,7 +91,4 @@ const Lobby = () => {
     </div>
   );
 };
-
 export default Lobby;
-
-

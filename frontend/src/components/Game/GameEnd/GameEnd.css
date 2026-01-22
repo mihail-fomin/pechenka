@@ -6,7 +6,6 @@
   padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
-
 .game-end-container {
   background: white;
   padding: 40px;
@@ -15,13 +14,11 @@
   width: 100%;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
-
 .game-end h1 {
   text-align: center;
   margin-bottom: 30px;
   color: #333;
 }
-
 .winner {
   text-align: center;
   margin-bottom: 30px;
@@ -30,28 +27,23 @@
   border-radius: 15px;
   color: white;
 }
-
 .winner h2 {
   margin: 0 0 10px 0;
   font-size: 24px;
 }
-
 .winner-coins {
   font-size: 32px;
   font-weight: bold;
   margin: 0;
 }
-
 .final-scores {
   margin-bottom: 30px;
 }
-
 .final-scores h3 {
   text-align: center;
   margin-bottom: 15px;
   color: #333;
 }
-
 .score-row {
   display: flex;
   align-items: center;
@@ -61,30 +53,25 @@
   border-radius: 10px;
   gap: 15px;
 }
-
 .winner-row {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   border: 2px solid #f59e0b;
 }
-
 .position {
   font-weight: bold;
   font-size: 18px;
   color: #667eea;
   min-width: 40px;
 }
-
 .name {
   flex: 1;
   font-weight: bold;
 }
-
 .coins {
   font-size: 18px;
   font-weight: bold;
   color: #f59e0b;
 }
-
 .btn-home {
   width: 100%;
   padding: 15px;
@@ -97,10 +84,7 @@
   cursor: pointer;
   transition: all 0.3s;
 }
-
 .btn-home:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
-
-

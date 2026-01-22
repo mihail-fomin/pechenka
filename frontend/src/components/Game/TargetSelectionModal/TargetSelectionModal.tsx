@@ -1,6 +1,5 @@
-import { GameStateData } from '../../types/game.types';
+import { GameStateData } from '../../../types/game.types';
 import './TargetSelectionModal.css';
-
 interface TargetSelectionModalProps {
   isOpen: boolean;
   actionType: 'sword' | 'shield';
@@ -11,7 +10,6 @@ interface TargetSelectionModalProps {
   onClose: () => void;
   selectedTarget: string | null;
 }
-
 const TargetSelectionModal = ({
   isOpen,
   actionType,
@@ -23,9 +21,7 @@ const TargetSelectionModal = ({
   selectedTarget,
 }: TargetSelectionModalProps) => {
   if (!isOpen) return null;
-
   const availableTargets = gameState.players.filter((p) => p.id !== currentPlayerId);
-
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -35,7 +31,6 @@ const TargetSelectionModal = ({
           </h3>
           <button className="modal-close" onClick={onClose}>×</button>
         </div>
-        
         <div className="targets-list">
           {availableTargets.map((player) => (
             <button
@@ -66,6 +61,4 @@ const TargetSelectionModal = ({
     </div>
   );
 };
-
 export default TargetSelectionModal;
-

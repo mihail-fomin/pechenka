@@ -1,15 +1,12 @@
-import { Card } from '../../types/game.types';
+import { Card } from '../../../types/game.types';
 import './CardPreviewModal.css';
-
 interface CardPreviewModalProps {
   isOpen: boolean;
   card: Card | null;
   onClose: () => void;
 }
-
 const CardPreviewModal = ({ isOpen, card, onClose }: CardPreviewModalProps) => {
   if (!isOpen || !card) return null;
-
   return (
     <div className="card-preview-overlay" onClick={onClose}>
       <div className="card-preview-content" onClick={(e) => e.stopPropagation()}>
@@ -44,7 +41,4 @@ const CardPreviewModal = ({ isOpen, card, onClose }: CardPreviewModalProps) => {
     </div>
   );
 };
-
 export default CardPreviewModal;
-
-

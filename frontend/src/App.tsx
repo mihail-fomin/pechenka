@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Lobby from './components/Lobby/Lobby';
-import GameRoom from './components/Game/GameRoom';
-
+import { Lobby } from './components/Lobby';
+import { GameRoom } from './components/Game';
 function App() {
   return (
     <Router>
@@ -12,7 +11,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
-
-

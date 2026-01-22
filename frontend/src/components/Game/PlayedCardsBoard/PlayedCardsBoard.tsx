@@ -1,19 +1,15 @@
-import { CircleInfo } from '../../types/game.types';
+import { CircleInfo } from '../../../types/game.types';
 import './PlayedCardsBoard.css';
-
 interface PlayedCardsBoardProps {
   circleInfo: CircleInfo;
   currentPlayerId: string;
   totalPlayers: number;
 }
-
 const PlayedCardsBoard = ({ circleInfo, currentPlayerId, totalPlayers }: PlayedCardsBoardProps) => {
   const { currentCircle, maxCircles, playersPlaced, playedCards } = circleInfo;
-  
   // Проверяем, выложил ли текущий игрок карту
   const hasCurrentPlayerPlaced = playersPlaced.includes(currentPlayerId);
   const playersWaiting = totalPlayers - playersPlaced.length;
-
   return (
     <div className="played-cards-board">
       <div className="board-header">
@@ -31,7 +27,6 @@ const PlayedCardsBoard = ({ circleInfo, currentPlayerId, totalPlayers }: PlayedC
           )}
         </div>
       </div>
-
       <div className="board-table">
         <div className="table-surface">
           {playedCards.length === 0 ? (
@@ -43,7 +38,6 @@ const PlayedCardsBoard = ({ circleInfo, currentPlayerId, totalPlayers }: PlayedC
             <div className="cards-on-table">
               {playedCards.map((card, index) => {
                 const isOwnCard = card.playerId === currentPlayerId;
-                
                 return (
                   <div 
                     key={`${card.playerId}-${index}`}
@@ -85,7 +79,6 @@ const PlayedCardsBoard = ({ circleInfo, currentPlayerId, totalPlayers }: PlayedC
           )}
         </div>
       </div>
-
       {hasCurrentPlayerPlaced && playersWaiting > 0 && (
         <div className="your-card-placed">
           <span className="check-icon">✓</span>
@@ -95,6 +88,4 @@ const PlayedCardsBoard = ({ circleInfo, currentPlayerId, totalPlayers }: PlayedC
     </div>
   );
 };
-
 export default PlayedCardsBoard;
-

@@ -1,6 +1,5 @@
-import { Card } from '../../types/game.types';
+import { Card } from '../../../types/game.types';
 import './PlayerHand.css';
-
 interface PlayerHandProps {
   hand: Card[];
   onCardClick?: (card: Card, index: number) => void;
@@ -9,7 +8,6 @@ interface PlayerHandProps {
   usedShield?: boolean;
   selectedCardIndex?: number | null;
 }
-
 const PlayerHand = ({
   hand,
   onCardClick,
@@ -27,21 +25,18 @@ const PlayerHand = ({
       onCardClick(card, index);
     }
   };
-
   const isCardClickable = (card: Card) => {
     if (!isCurrentTurn) return false;
     if (card.type === 'sword' && usedSword) return false;
     if (card.type === 'shield' && usedShield) return false;
     return card.type === 'hint' || card.type === 'sword' || card.type === 'shield' || card.type === 'hill';
   };
-
   return (
     <div className="player-hand">
       <div className="cards-container">
         {hand.map((card, index) => {
           const clickable = isCardClickable(card);
           const isSelected = selectedCardIndex === index;
-          
           return (
             <div 
               key={index} 
@@ -85,7 +80,4 @@ const PlayerHand = ({
     </div>
   );
 };
-
 export default PlayerHand;
-
-
