@@ -1,67 +1,256 @@
 .played-cards-board {
   background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .board-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 8px;
+  gap: 8px;
 }
 .circle-indicator {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 4px;
   background: rgba(102, 126, 234, 0.2);
-  padding: 10px 20px;
-  border-radius: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
   border: 1px solid rgba(102, 126, 234, 0.3);
 }
 .circle-label {
-  font-size: 12px;
+  font-size: 9px;
   color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 .circle-number {
-  font-size: 24px;
+  font-size: 14px;
   font-weight: bold;
   color: #667eea;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
-.players-status {
+.turn-indicator {
+  flex: 1;
+  text-align: center;
+}
+.your-turn {
+  color: #ffd700;
+  font-weight: bold;
   font-size: 14px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+.other-turn {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
+.players-status {
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.8);
 }
 .waiting-count {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 4px;
+  padding: 4px 8px;
   background: rgba(255, 193, 7, 0.15);
-  border-radius: 20px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 193, 7, 0.3);
   color: #ffc107;
+  font-size: 11px;
 }
 .waiting-count strong {
-  font-size: 18px;
+  font-size: 12px;
 }
 .all-placed {
-  padding: 8px 16px;
+  padding: 4px 8px;
   background: rgba(76, 175, 80, 0.15);
-  border-radius: 20px;
+  border-radius: 10px;
   border: 1px solid rgba(76, 175, 80, 0.3);
   color: #4caf50;
   font-weight: bold;
-  animation: pulse 1.5s ease-in-out infinite;
+  font-size: 11px;
+}
+/* Строка игроков */
+.players-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.player-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  position: relative;
+  transition: all 0.2s;
+}
+.player-chip.is-me {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.4);
+  color: #fff;
+}
+.player-chip.active-turn {
+  border-color: #ffd700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+.player-chip.has-placed {
+  opacity: 0.6;
+}
+.chip-name {
+  font-weight: 600;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chip-info {
+  display: flex;
+  gap: 4px;
+  font-size: 10px;
+  opacity: 0.8;
+}
+.chip-coins, .chip-cards {
+  display: flex;
+  align-items: center;
+}
+.chip-badge {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+.chip-badge.sword {
+  filter: hue-rotate(320deg) saturate(1.5);
+}
+.chip-placed {
+  color: #4caf50;
+  font-weight: bold;
+  font-size: 10px;
+}
+.chip-waiting {
+  font-size: 10px;
+  animation: pulse 1.5s infinite;
+}
+/* Тип выложенной карты в чипе игрока */
+.chip-card-type {
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.chip-card-type.hidden {
+  background: rgba(100, 100, 100, 0.3);
+  color: #aaa;
+}
+.chip-card-type.hint {
+  background: rgba(102, 126, 234, 0.3);
+  color: #a5b4fc;
+}
+.chip-card-type.sword {
+  background: rgba(245, 87, 108, 0.3);
+  color: #ff6b6b;
+}
+.chip-card-type.shield {
+  background: rgba(79, 172, 254, 0.3);
+  color: #4facfe;
+}
+.chip-card-type.hill {
+  background: rgba(168, 237, 234, 0.3);
+  color: #8be9a8;
+}
+/* Список выложенных карт */
+.played-cards-list {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.list-title {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.list-item.is-mine {
+  background: rgba(102, 126, 234, 0.2);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+.list-item.hidden {
+  color: rgba(255, 255, 255, 0.6);
+}
+.list-item.hint {
+  border-left: 3px solid #667eea;
+}
+.list-item.sword {
+  border-left: 3px solid #f5576c;
+}
+.list-item.shield {
+  border-left: 3px solid #4facfe;
+}
+.list-item.hill {
+  border-left: 3px solid #8be9a8;
+}
+.item-player {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  min-width: 80px;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.item-arrow {
+  color: rgba(255, 255, 255, 0.4);
+}
+.item-card {
+  color: rgba(255, 255, 255, 0.8);
+}
+/* Отображение атак и защит */
+.chip-action {
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.sword-action {
+  background: rgba(245, 87, 108, 0.35);
+  color: #ff6b6b;
+  border: 1px solid rgba(245, 87, 108, 0.6);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.shield-action {
+  background: rgba(79, 172, 254, 0.35);
+  color: #4facfe;
+  border: 1px solid rgba(79, 172, 254, 0.6);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 @keyframes pulse {
   0%, 100% { opacity: 1; }
@@ -69,73 +258,73 @@
 }
 .board-table {
   position: relative;
-  min-height: 180px;
+  min-height: 100px;
 }
 .table-surface {
   background: 
     radial-gradient(ellipse at center, rgba(34, 139, 34, 0.3) 0%, transparent 70%),
     linear-gradient(180deg, rgba(0, 100, 0, 0.2) 0%, rgba(0, 80, 0, 0.1) 100%);
-  border-radius: 100px / 60px;
-  padding: 30px;
-  min-height: 140px;
+  border-radius: 60px / 40px;
+  padding: 15px;
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid rgba(139, 69, 19, 0.4);
+  border: 2px solid rgba(139, 69, 19, 0.35);
   box-shadow: 
-    inset 0 0 60px rgba(0, 0, 0, 0.3),
-    0 4px 20px rgba(0, 0, 0, 0.2);
+    inset 0 0 30px rgba(0, 0, 0, 0.25),
+    0 2px 10px rgba(0, 0, 0, 0.15);
 }
 .empty-table {
   text-align: center;
   color: rgba(255, 255, 255, 0.5);
 }
 .empty-icon {
-  font-size: 48px;
-  margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 5px;
   opacity: 0.5;
   animation: float 3s ease-in-out infinite;
 }
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-5px); }
 }
 .empty-table p {
   margin: 0;
-  font-size: 16px;
+  font-size: 12px;
   font-style: italic;
 }
 .cards-on-table {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: -20px;
+  gap: -10px;
   perspective: 1000px;
 }
 .table-card {
-  width: 80px;
-  height: 115px;
-  border-radius: 10px;
+  width: 55px;
+  height: 80px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   animation: cardDrop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   transform-origin: center bottom;
-  margin: 0 -10px;
+  margin: 0 -6px;
   box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.4),
-    0 5px 15px rgba(0, 0, 0, 0.2);
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease;
 }
 .table-card:hover {
-  transform: translateY(-15px) rotate(0deg) scale(1.1) !important;
+  transform: translateY(-8px) rotate(0deg) scale(1.08) !important;
   z-index: 100;
 }
 @keyframes cardDrop {
   0% {
     opacity: 0;
-    transform: translateY(-50px) rotateX(90deg) scale(0.5);
+    transform: translateY(-30px) rotateX(90deg) scale(0.5);
   }
   100% {
     opacity: 1;
@@ -144,28 +333,28 @@
 }
 .table-card.hidden {
   background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .table-card.hint {
   background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .table-card.sword {
   background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .table-card.shield {
   background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .table-card.hill {
   background: linear-gradient(145deg, #a8edea 0%, #fed6e3 100%);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .table-card.own-card {
   box-shadow: 
-    0 0 20px rgba(102, 126, 234, 0.6),
-    0 10px 30px rgba(0, 0, 0, 0.4);
+    0 0 10px rgba(102, 126, 234, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.3);
   border-color: #667eea;
 }
 .card-back {
@@ -174,10 +363,10 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 10px;
+  padding: 5px;
 }
 .card-back-pattern {
-  font-size: 32px;
+  font-size: 20px;
   opacity: 0.7;
   animation: spin 3s linear infinite;
 }
@@ -191,149 +380,151 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 8px;
+  padding: 4px;
   color: white;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 .table-card.hill .card-front {
   color: #333;
   text-shadow: none;
 }
 .card-front .card-icon {
-  font-size: 28px;
-  margin-bottom: 4px;
+  font-size: 18px;
+  margin-bottom: 2px;
 }
 .card-front .card-icon-img {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 4px;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 2px;
   object-fit: contain;
 }
 .card-back-img {
   width: 100%;
-  height: 80%;
+  height: 75%;
   object-fit: contain;
   opacity: 0.9;
 }
 .card-front .card-value {
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bold;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 .card-front .card-type-label {
-  font-size: 9px;
+  font-size: 7px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   opacity: 0.9;
 }
 .player-label {
   position: absolute;
-  bottom: -25px;
+  bottom: -18px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 10px;
+  font-size: 8px;
   color: rgba(255, 255, 255, 0.7);
   white-space: nowrap;
   background: rgba(0, 0, 0, 0.5);
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .your-card-placed {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-  padding: 12px 20px;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 12px;
   background: rgba(76, 175, 80, 0.15);
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid rgba(76, 175, 80, 0.3);
   color: #4caf50;
-  font-size: 14px;
+  font-size: 11px;
 }
 .check-icon {
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   background: #4caf50;
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: bold;
 }
 /* Адаптивность для мобильных */
 @media (max-width: 480px) {
   .played-cards-board {
-    padding: 15px;
-    border-radius: 15px;
+    padding: 10px;
+    border-radius: 10px;
   }
   .board-header {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
+    flex-direction: row;
+    gap: 8px;
   }
   .circle-indicator {
-    padding: 8px 16px;
+    padding: 4px 10px;
   }
   .circle-number {
-    font-size: 20px;
+    font-size: 14px;
   }
   .table-surface {
-    padding: 20px;
-    min-height: 120px;
-    border-radius: 80px / 50px;
+    padding: 10px;
+    min-height: 70px;
+    border-radius: 50px / 35px;
   }
   .table-card {
-    width: 65px;
-    height: 95px;
-    margin: 0 -8px;
+    width: 48px;
+    height: 68px;
+    margin: 0 -5px;
   }
   .card-front .card-icon {
-    font-size: 24px;
+    font-size: 16px;
   }
   .card-front .card-icon-img {
-    width: 32px;
-    height: 32px;
+    width: 20px;
+    height: 20px;
   }
   .card-front .card-value {
-    font-size: 14px;
+    font-size: 10px;
   }
   .card-front .card-type-label {
-    font-size: 8px;
+    font-size: 6px;
   }
   .card-back-pattern {
-    font-size: 26px;
+    font-size: 16px;
   }
   .player-label {
-    font-size: 9px;
-    bottom: -22px;
+    font-size: 7px;
+    bottom: -15px;
   }
   .empty-icon {
-    font-size: 36px;
+    font-size: 22px;
   }
   .empty-table p {
-    font-size: 14px;
+    font-size: 10px;
   }
 }
 @media (max-width: 360px) {
   .table-card {
-    width: 55px;
-    height: 80px;
-    margin: 0 -6px;
+    width: 42px;
+    height: 60px;
+    margin: 0 -4px;
   }
   .card-front .card-icon {
-    font-size: 20px;
+    font-size: 14px;
   }
   .card-front .card-icon-img {
-    width: 26px;
-    height: 26px;
+    width: 18px;
+    height: 18px;
   }
   .card-front .card-value {
-    font-size: 12px;
+    font-size: 9px;
   }
   .card-back-pattern {
-    font-size: 22px;
+    font-size: 14px;
   }
 }

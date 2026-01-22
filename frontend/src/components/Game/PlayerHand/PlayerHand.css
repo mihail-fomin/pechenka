@@ -3,8 +3,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 15px 10px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+  padding: 8px 6px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
   z-index: 100;
   pointer-events: none;
 }
@@ -13,57 +13,56 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   max-width: 100vw;
   overflow-y: visible;
-  padding: 10px;
+  padding: 6px;
   pointer-events: auto;
   width: 100%;
 }
 .card {
-  /* Вертикальные карты большего размера */
-  width: 90px;
-  height: 130px;
-  border-radius: 8px;
-  border: 3px solid #fff;
+  width: 70px;
+  height: 100px;
+  border-radius: 6px;
+  border: 2px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
 }
 /* Адаптивные размеры для мобильных */
 @media (max-width: 480px) {
   .player-hand {
-    padding: 8px;
+    padding: 6px 4px;
   }
   .cards-container {
-    gap: 8px;
-    padding: 8px;
+    gap: 6px;
+    padding: 4px;
   }
   .card {
-    width: 75px;
-    height: 110px;
+    width: 58px;
+    height: 85px;
     border-width: 2px;
   }
 }
 /* Для очень маленьких экранов */
 @media (max-width: 360px) {
   .card {
-    width: 65px;
-    height: 95px;
+    width: 50px;
+    height: 72px;
   }
 }
 .card:hover {
-  transform: scale(1.1) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transform: scale(1.08) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
   z-index: 200 !important;
 }
 @media (max-width: 480px) {
   .card:hover {
-    transform: scale(1.08) !important;
+    transform: scale(1.06) !important;
   }
 }
 .card.hint {
@@ -84,7 +83,7 @@
 }
 .card-content {
   text-align: center;
-  padding: 12px;
+  padding: 6px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -93,65 +92,65 @@
   justify-content: center;
 }
 .card-icon {
-  font-size: 40px;
-  margin-bottom: 8px;
+  font-size: 28px;
+  margin-bottom: 4px;
 }
 .card-icon-img {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 8px;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 4px;
   object-fit: contain;
 }
 .card-type {
-  font-size: 12px;
+  font-size: 9px;
   font-weight: bold;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 .card-value {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
 }
 @media (max-width: 480px) {
   .card-icon {
-    font-size: 32px;
-    margin-bottom: 6px;
+    font-size: 22px;
+    margin-bottom: 3px;
   }
   .card-icon-img {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 6px;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 3px;
   }
   .card-type {
-    font-size: 10px;
-    margin-bottom: 4px;
+    font-size: 8px;
+    margin-bottom: 2px;
   }
   .card-value {
-    font-size: 16px;
+    font-size: 13px;
   }
 }
 @media (max-width: 360px) {
   .card-icon {
-    font-size: 28px;
+    font-size: 18px;
   }
   .card-icon-img {
-    width: 35px;
-    height: 35px;
+    width: 24px;
+    height: 24px;
   }
   .card-type {
-    font-size: 9px;
+    font-size: 7px;
   }
   .card-value {
-    font-size: 14px;
+    font-size: 11px;
   }
 }
 .card.clickable {
   cursor: pointer;
 }
 .card.clickable:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 .card.disabled {
   opacity: 0.5;
@@ -162,41 +161,41 @@
   box-shadow: none;
 }
 .card-used {
-  font-size: 10px;
-  margin-top: 5px;
+  font-size: 8px;
+  margin-top: 3px;
   opacity: 0.8;
 }
 .card.selected {
-  border: 3px solid #667eea;
-  box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
-  transform: scale(1.15) !important;
+  border: 2px solid #667eea;
+  box-shadow: 0 0 14px rgba(102, 126, 234, 0.7);
+  transform: scale(1.1) !important;
   z-index: 150 !important;
 }
 .card.selected::after {
   content: '✓';
   position: absolute;
-  top: 3px;
-  right: 3px;
+  top: 2px;
+  right: 2px;
   background: #667eea;
   color: white;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 9px;
   font-weight: bold;
 }
 @media (max-width: 480px) {
   .card.selected {
-    transform: scale(1.1) !important;
+    transform: scale(1.08) !important;
   }
   .card.selected::after {
-    width: 18px;
-    height: 18px;
-    font-size: 11px;
-    top: 3px;
-    right: 3px;
+    width: 12px;
+    height: 12px;
+    font-size: 8px;
+    top: 2px;
+    right: 2px;
   }
 }

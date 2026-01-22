@@ -15,6 +15,7 @@ export class Player {
   public revealedCards: Card[] = [];
   public usedSword: boolean = false;
   public usedShield: boolean = false;
+  public swordTargetId: string | null = null; // ID игрока, на которого напали
   public shieldTargetId: string | null = null; // ID игрока, от которого защитились
   public playerCount: number = 4; // Количество игроков для расчета цепочки охоты
 
@@ -75,6 +76,7 @@ export class Player {
 
     this.hand.splice(swordCardIndex, 1);
     this.usedSword = true;
+    this.swordTargetId = targetPlayerId;
   }
 
   /**

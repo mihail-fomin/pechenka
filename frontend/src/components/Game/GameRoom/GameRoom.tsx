@@ -280,14 +280,19 @@ const GameRoom = () => {
               </div>
             </div>
           )}
-          <GameBoard gameState={gameState} currentPlayerId={playerId} />
-          {/* Доска с выложенными картами */}
+          {/* Объединённая доска: игроки + выложенные карты */}
           {gameState.circleInfo && gameState.state === 'circle_phase' && (
             <PlayedCardsBoard 
               circleInfo={gameState.circleInfo}
               currentPlayerId={playerId}
               totalPlayers={gameState.players.length}
+              players={gameState.players}
+              currentPlayerIndex={gameState.currentPlayerIndex}
             />
+          )}
+          {/* Показываем GameBoard только когда нет circleInfo (другие фазы) */}
+          {(!gameState.circleInfo || gameState.state !== 'circle_phase') && (
+            <GameBoard gameState={gameState} currentPlayerId={playerId} />
           )}
           {/* Тестовые кнопки для симуляции игры (только в dev режиме) */}
           {import.meta.env.DEV && (gameState.state === 'circle_phase' || gameState.state === 'resolving_phase') && (
@@ -297,14 +302,14 @@ const GameRoom = () => {
                 {gameState.state === 'circle_phase' && (
                   <>
                     <button
-                      className="btn btn-test"
+                      className="btn-test"
                       onClick={handleAutoPlaySelf}
                       disabled={gameState.circleInfo?.playersPlaced.includes(playerId)}
                     >
                       🎲 Мой случайный ход
                     </button>
                     <button
-                      className="btn btn-test-all"
+                      className="btn-test-all"
                       onClick={handleAutoPlayAll}
                       disabled={gameState.circleInfo?.playersPlaced.length === gameState.players.length}
                     >
@@ -315,13 +320,13 @@ const GameRoom = () => {
                 {gameState.state === 'resolving_phase' && (
                   <>
                     <button
-                      className="btn btn-test"
+                      className="btn-test"
                       onClick={handleAutoPlaySelf}
                     >
                       🎲 Мой автоход (раскрытие)
                     </button>
                     <button
-                      className="btn btn-test-all"
+                      className="btn-test-all"
                       onClick={handleAutoPlayAll}
                     >
                       🎯 Автораскрытие всех

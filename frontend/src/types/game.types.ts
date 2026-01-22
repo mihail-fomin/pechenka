@@ -42,6 +42,8 @@ export interface PublicPlayerState {
   revealedCards: Card[];
   usedSword: boolean;
   usedShield: boolean;
+  swordTargetId?: string | null;  // На кого напал
+  shieldTargetId?: string | null; // От кого защитился
 }
 
 export interface PrivatePlayerState {

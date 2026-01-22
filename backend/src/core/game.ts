@@ -43,6 +43,8 @@ export interface PublicPlayerState {
   revealedCards: Card[];
   usedSword: boolean;
   usedShield: boolean;
+  swordTargetId?: string | null;  // На кого напал
+  shieldTargetId?: string | null; // От кого защитился
 }
 
 /**
@@ -734,7 +736,9 @@ export class PechenkaGame {
         handSize: p.hand.length,
         revealedCards: [...p.revealedCards],
         usedSword: p.usedSword,
-        usedShield: p.usedShield
+        usedShield: p.usedShield,
+        swordTargetId: p.swordTargetId,
+        shieldTargetId: p.shieldTargetId
       })),
       currentRound: this.currentRound,
       currentPlayerIndex: this.currentPlayerIndex,
